@@ -42,7 +42,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
-    Route::get('/fraud-logs', [AdminController::class, 'fraudLogs'])->name('fraud_logs');
+    // Route::get('/fraud-logs', [AdminController::class, 'fraudLogs'])->name('fraud_logs'); // commented out as it caused issues
     Route::post('/notifications/read', [AdminController::class, 'markNotificationsAsRead'])->name('notifications.read');
     
 
@@ -77,3 +77,7 @@ Route::prefix('api/regions')->group(function () {
     Route::get('/districts/{cityCode}', [ProfileController::class, 'getDistricts']);
     Route::get('/villages/{districtCode}', [ProfileController::class, 'getVillages']);
 });
+
+// Fallback for Dynamic Pages (Must be at the very end)
+Route::get('/{slug}', [LandingController::class, 'showPage'])->name('page.direct');
+捉

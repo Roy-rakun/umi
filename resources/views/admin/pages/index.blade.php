@@ -46,8 +46,12 @@
                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                     </svg>
-                                    <span class="ml-2">Edit Content</span>
+                                    <span class="ml-2">Edit</span>
                                 </a>
+                                <button onclick="copyToClipboard('{{ url('/' . $page->slug) }}')" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-blue-600 rounded-lg focus:outline-none focus:shadow-outline-gray" title="Copy Link">
+                                    <i class="fas fa-copy w-5 h-5 flex items-center justify-center"></i>
+                                    <span class="ml-2">Copy Link</span>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -57,4 +61,26 @@
         </div>
     </div>
 </div>
+
+<script>
+function copyToClipboard(text) {
+    if (!navigator.clipboard) {
+        // Fallback for older browsers
+        const el = document.createElement('textarea');
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert('Link copied to clipboard!');
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function() {
+        alert('Link copied to clipboard!');
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+</script>
 @endsection
+捉
