@@ -104,6 +104,68 @@
                         <i class="fas fa-plus mr-2"></i> Tambah Statistik
                     </button>
                 </div>
+
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-6">Gallery Grid (Maks 9 Item)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        @for($i = 0; $i < 9; $i++)
+                        @php $item = ($section->content['gallery'] ?? [])[$i] ?? []; @endphp
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 relative group">
+                            <div class="flex justify-between items-start mb-4">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Item #{{ $i + 1 }}</label>
+                                <label class="flex items-center gap-1 cursor-pointer">
+                                    <input type="checkbox" name="gallery[{{ $i }}][is_large]" {{ (isset($item['is_large']) && $item['is_large']) ? 'checked' : '' }} class="hidden star-checkbox">
+                                    <i onclick="
+                                        this.closest('form').querySelectorAll('.star-checkbox').forEach(cb => cb.checked = false);
+                                        this.closest('form').querySelectorAll('.fa-star').forEach(s => s.classList.replace('text-amber-400', 'text-gray-200'));
+                                        this.previousElementSibling.checked = true;
+                                        this.classList.replace('text-gray-200', 'text-amber-400');
+                                    " class="fas fa-star transition-colors {{ (isset($item['is_large']) && $item['is_large']) ? 'text-amber-400' : 'text-gray-200' }} hover:text-amber-300" title="Jadikan Kotak Besar"></i>
+                                </label>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- Image Upload -->
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 block mb-1">Gambar</label>
+                                    @if(isset($item['image_url']))
+                                    <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-gray-100 mb-2">
+                                        <img src="{{ $item['image_url'] }}" class="w-full h-full object-cover">
+                                        <input type="hidden" name="gallery[{{ $i }}][image_url]" value="{{ $item['image_url'] }}">
+                                    </div>
+                                    @endif
+                                    <input type="file" name="gallery[{{ $i }}][image]" class="w-full text-xs">
+                                </div>
+
+                                <!-- Icon Fallback -->
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 block mb-1">Icon (Fallback)</label>
+                                    <div x-data="iconPicker('{{ $item['icon'] ?? '' }}')" class="relative">
+                                        <button type="button" @click="toggle" class="w-full p-2 border border-gray-200 rounded-lg text-xs bg-gray-50 hover:bg-white flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <iconify-icon x-show="value" :icon="value" class="text-xs text-primary"></iconify-icon>
+                                                <span x-text="value || 'Pilih Icon'" :class="!value && 'text-gray-400'"></span>
+                                            </div>
+                                            <i class="fas fa-search text-[8px] text-gray-300"></i>
+                                        </button>
+                                        <input type="hidden" name="gallery[{{ $i }}][icon]" x-model="value">
+                                        <div x-show="open" @click.away="close" class="absolute z-50 mt-1 p-4 bg-white border border-gray-200 rounded-xl shadow-xl left-0 w-64">
+                                            <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                                            <div class="icon-grid max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                                                <template x-for="icon in filteredIcons()" :key="icon">
+                                                    <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
+                                                        <iconify-icon :icon="icon" class="text-lg text-gray-700"></iconify-icon>
+                                                    </button>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endfor
+                    </div>
+                </div>
             </div>
 
         @elseif($section->key == 'problem')

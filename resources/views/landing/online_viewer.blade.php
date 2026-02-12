@@ -308,14 +308,23 @@
        </div>
       </div><!-- Right: Gallery -->
       <div class="grid grid-cols-3 gap-3">
-       <div class="gallery-item aspect-square rounded-2xl">📿</div>
-       <div class="gallery-item aspect-square rounded-2xl">🕌</div>
-       <div class="gallery-item aspect-square rounded-2xl">✨</div>
-       <div class="gallery-item aspect-square rounded-2xl">📖</div>
-       <div class="gallery-item aspect-square rounded-2xl col-span-2 row-span-2 text-4xl">🤲</div>
-       <div class="gallery-item aspect-square rounded-2xl">💫</div>
-       <div class="gallery-item aspect-square rounded-2xl">🌙</div>
-       <div class="gallery-item aspect-square rounded-2xl">❤️</div>
+       @php
+        $gallery = $sections['about']->content['gallery'] ?? [];
+       @endphp
+       @foreach($gallery as $item)
+        @php
+            $isLarge = isset($item['is_large']) && $item['is_large'];
+            $hasImage = isset($item['image_url']) && $item['image_url'];
+            $hasIcon = isset($item['icon']) && $item['icon'];
+        @endphp
+        <div class="gallery-item aspect-square rounded-2xl overflow-hidden {{ $isLarge ? 'col-span-2 row-span-2 text-4xl' : '' }}">
+            @if($hasImage)
+                <img src="{{ $item['image_url'] }}" class="w-full h-full object-cover">
+            @elseif($hasIcon)
+                <iconify-icon icon="{{ $item['icon'] }}" class="{{ $isLarge ? 'text-5xl' : 'text-xl' }}" style="color: var(--color-primary);"></iconify-icon>
+            @endif
+        </div>
+       @endforeach
       </div>
      </div>
     </div>
