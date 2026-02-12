@@ -81,4 +81,3 @@ class LandingSectionController extends Controller
         return redirect()->route('admin.landing.sections.index')->with('success', "Section {$section->name} updated successfully.");
     }
 }
-捉
