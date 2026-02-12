@@ -71,8 +71,10 @@ class AuthController extends Controller
             'status' => 'active',
         ]);
 
+        event(new \Illuminate\Auth\Events\Registered($user));
+
         // Create Affiliate Record
-        \App\Models\Affiliate::create([
+        $affiliate = \App\Models\Affiliate::create([
             'affiliate_id' => $user->affiliate_id,
             'user_id' => $user->id,
             'level' => 'outer', // Default level
@@ -84,8 +86,16 @@ class AuthController extends Controller
         $admins = User::where('role', 'admin')->get();
         Notification::send($admins, new NewAffiliateNotification($affiliate));
 
-        Auth::login($user);
+        return redirect()->route('register.success')->with('registered_name', $user->name);
+    }
 
-        return redirect()->route('affiliate.dashboard');
+    public function registrationSuccess()
+    {
+        if (!session('registered_name')) {
+            return redirect()->route('login');
+        }
+        return view('auth.register-success', [
+            'name' => session('registered_name')
+        ]);
     }
 }
