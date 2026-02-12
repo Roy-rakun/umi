@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LandingSection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class LandingSectionController extends Controller
@@ -25,32 +26,30 @@ class LandingSectionController extends Controller
 
         // Handle File Uploads
         if ($request->hasFile('hero_image')) {
-            $file = $request->file('hero_image');
-            $filename = 'hero_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/landing'), $filename);
-            $newContent['image_url'] = asset('uploads/landing/' . $filename);
+            $path = $request->file('hero_image')->store('landing', 'public');
+            $newContent['image_url'] = Storage::disk('public')->url($path);
         }
 
         if ($request->hasFile('logo_image')) {
-            $file = $request->file('logo_image');
-            $filename = 'logo_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/landing'), $filename);
-            $newContent['logo_url'] = asset('uploads/landing/' . $filename);
+            $path = $request->file('logo_image')->store('landing', 'public');
+            $newContent['logo_url'] = Storage::disk('public')->url($path);
         }
 
         // Handle Gallery Uploads
         if ($request->has('gallery')) {
             $galleryData = $request->input('gallery');
+            
+            // Laravel handles array file uploads specifically
             if ($request->hasFile('gallery')) {
-                foreach ($request->file('gallery') as $index => $itemFile) {
-                    if (isset($itemFile['image'])) {
-                        $file = $itemFile['image'];
-                        $filename = 'gallery_' . time() . '_' . $index . '.' . $file->getClientOriginalExtension();
-                        $file->move(public_path('uploads/landing'), $filename);
-                        $galleryData[$index]['image_url'] = asset('uploads/landing/' . $filename);
+                $uploadedFiles = $request->file('gallery');
+                foreach ($uploadedFiles as $index => $itemFile) {
+                    if (isset($itemFile['image']) && $itemFile['image']->isValid()) {
+                        $path = $itemFile['image']->store('landing', 'public');
+                        $galleryData[$index]['image_url'] = Storage::disk('public')->url($path);
                     }
                 }
             }
+            
             // Ensure only one item is marked as large
             $foundLarge = false;
             foreach ($galleryData as $index => $item) {
@@ -59,10 +58,10 @@ class LandingSectionController extends Controller
                         $galleryData[$index]['is_large'] = true;
                         $foundLarge = true;
                     } else {
-                        $galleryData[$index]['is_large'] = false; // Unset if another large is found
+                        $galleryData[$index]['is_large'] = false;
                     }
                 } else {
-                    $galleryData[$index]['is_large'] = false; // Ensure it's explicitly false if not 'on'
+                    $galleryData[$index]['is_large'] = (isset($item['is_large']) && $item['is_large'] === true);
                 }
             }
             $newContent['gallery'] = $galleryData;
