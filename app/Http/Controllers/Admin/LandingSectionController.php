@@ -27,12 +27,12 @@ class LandingSectionController extends Controller
         // 1. Handle Top-Level File Uploads
         if ($request->hasFile('hero_image')) {
             $path = $request->file('hero_image')->store('landing', 'public');
-            $content['image_url'] = Storage::disk('public')->url($path);
+            $content['image_url'] = '/storage/' . $path;
         }
 
         if ($request->hasFile('logo_image')) {
             $path = $request->file('logo_image')->store('landing', 'public');
-            $content['logo_url'] = Storage::disk('public')->url($path);
+            $content['logo_url'] = '/storage/' . $path;
         }
 
         // 2. Handle Gallery (Special Array Processing)
@@ -48,7 +48,7 @@ class LandingSectionController extends Controller
                     $file = $request->file("gallery.$i.image");
                     if ($file->isValid()) {
                         $path = $file->store('landing', 'public');
-                        $item['image_url'] = Storage::disk('public')->url($path);
+                        $item['image_url'] = '/storage/' . $path;
                     }
                 } elseif (isset($existingGallery[$i]['image_url']) && !isset($item['image_url'])) {
                     $item['image_url'] = $existingGallery[$i]['image_url'];
@@ -81,3 +81,4 @@ class LandingSectionController extends Controller
         return redirect()->route('admin.landing.sections.index')->with('success', "Section {$section->name} updated successfully.");
     }
 }
+捉
