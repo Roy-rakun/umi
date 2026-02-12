@@ -105,6 +105,12 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #999; 
         }
+
+        .icon-grid {
+            display: grid !important;
+            grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+            gap: 0.5rem !important;
+        }
         
         .sidebar-link.active {
             background-color: #FFF0F0;
