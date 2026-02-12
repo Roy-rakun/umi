@@ -69,7 +69,7 @@
                         </td>
                         <td class="px-6 py-4 text-center">
                             @if(!$affiliate->user->hasVerifiedEmail())
-                            <form action="{{ route('admin.affiliates.verify', $affiliate->id) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.affiliates.verify', $affiliate->affiliate_id) }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" class="text-xs bg-amber-500 text-white px-2 py-1 rounded hover:bg-amber-600 transition-colors" title="Verifikasi Manual">
                                     Verifikasi
