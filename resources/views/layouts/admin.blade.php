@@ -110,6 +110,9 @@
             display: grid !important;
             grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
             gap: 0.5rem !important;
+            max-height: 250px !important;
+            overflow-y: auto !important;
+            padding-right: 4px !important;
         }
         
         .sidebar-link.active {
