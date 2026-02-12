@@ -28,6 +28,25 @@
             Terima kasih telah mendaftar! Sebelum mulai, silakan verifikasi alamat email Anda dengan mengklik tautan yang baru saja kami kirimkan ke email Anda.
         </p>
 
+        @php
+            $contactSection = \App\Models\LandingSection::where('key', 'contact')->first();
+            $channels = $contactSection ? ($contactSection->content['channels'] ?? []) : [];
+        @endphp
+
+        @if(!empty($channels))
+        <div class="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+            <p class="text-sm font-bold text-gray-700 mb-4">Kesulitan mendapat link verifikasi? Hubungi admin kami di:</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                @foreach($channels as $channel)
+                <a href="{{ $channel['url'] }}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-gray-200 text-sm font-medium hover:border-primary/30 transition-colors">
+                    <iconify-icon icon="{{ $channel['icon'] ?? 'lucide:link' }}" class="text-primary"></iconify-icon>
+                    {{ $channel['name'] }}
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         @if (session('message'))
             <div class="bg-green-50 text-green-700 p-4 rounded-2xl mb-6 text-sm">
                 Tautan verifikasi baru telah dikirim ke alamat email Anda.

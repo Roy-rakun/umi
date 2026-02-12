@@ -6,9 +6,17 @@
             <h3 class="text-xl font-serif font-bold text-heading">Affiliates List</h3>
             <p class="text-sm text-gray-500">Manage your partner network and track their performance.</p>
         </div>
-        <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-900 transition-colors shadow-sm">
-            <i class="fas fa-plus mr-2"></i> Add New Affiliate
-        </button>
+        <div class="flex gap-2">
+            <form action="{{ route('admin.affiliates.verify-all') }}" method="POST" onsubmit="return confirm('Verifikasi semua akun yang belum aktif?')">
+                @csrf
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors shadow-sm">
+                    <i class="fas fa-check-double mr-2"></i> Verifikasi Semua
+                </button>
+            </form>
+            <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-900 transition-colors shadow-sm">
+                <i class="fas fa-plus mr-2"></i> Add New Affiliate
+            </button>
+        </div>
     </div>
 
     <!-- Affiliates Table -->
@@ -60,9 +68,18 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-center">
+                            @if(!$affiliate->user->hasVerifiedEmail())
+                            <form action="{{ route('admin.affiliates.verify', $affiliate->id) }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-xs bg-amber-500 text-white px-2 py-1 rounded hover:bg-amber-600 transition-colors" title="Verifikasi Manual">
+                                    Verifikasi
+                                </button>
+                            </form>
+                            @else
                             <button class="text-gray-400 hover:text-primary transition-colors">
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
+                            @endif
                         </td>
                     </tr>
                     @empty

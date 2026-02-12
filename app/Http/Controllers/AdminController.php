@@ -223,5 +223,34 @@ class AdminController extends Controller
         
         return back()->with('success', 'Payout berhasil diselesaikan dan notifikasi dikirim ke affiliate.');
     }
-}
 
+    public function verifyAffiliate($id)
+    {
+        $affiliate = Affiliate::findOrFail($id);
+        $user = $affiliate->user;
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            $affiliate->update(['status' => 'active']);
+            return back()->with('success', "Akun {$user->name} berhasil diverifikasi secara manual.");
+        }
+
+        return back()->with('info', "Akun {$user->name} sudah terverifikasi sebelumnya.");
+    }
+
+    public function verifyAllAffiliates()
+    {
+        $unverifiedAffiliates = Affiliate::whereHas('user', function ($query) {
+            $query->whereNull('email_verified_at');
+        })->get();
+
+        $count = 0;
+        foreach ($unverifiedAffiliates as $affiliate) {
+            $affiliate->user->markEmailAsVerified();
+            $affiliate->update(['status' => 'active']);
+            $count++;
+        }
+
+        return back()->with('success', "Total $count akun berhasil diverifikasi secara massal.");
+    }
+}

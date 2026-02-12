@@ -66,6 +66,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::resource('sections', \App\Http\Controllers\Admin\LandingSectionController::class)->only(['index', 'edit', 'update']);
         Route::post('sections/{section}/reorder/{direction}', [\App\Http\Controllers\Admin\LandingSectionController::class, 'reorder'])->name('sections.reorder');
     });
+
+    // Manual Verification
+    Route::post('/affiliates/verify-all', [AdminController::class, 'verifyAllAffiliates'])->name('affiliates.verify-all');
+    Route::post('/affiliates/{id}/verify', [AdminController::class, 'verifyAffiliate'])->name('affiliates.verify');
 });
 
 // Affiliate Routes
