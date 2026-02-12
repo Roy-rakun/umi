@@ -11,8 +11,35 @@ class LandingSectionController extends Controller
 {
     public function index()
     {
-        $sections = LandingSection::all();
+        $sections = LandingSection::orderBy('sort_order', 'asc')->get();
         return view('admin.landing.sections.index', compact('sections'));
+    }
+
+    public function reorder(Request $request, LandingSection $section, $direction)
+    {
+        $currentOrder = $section->sort_order;
+        
+        if ($direction === 'up') {
+            $swapSection = LandingSection::where('sort_order', '<', $currentOrder)
+                ->orderBy('sort_order', 'desc')
+                ->first();
+        } else {
+            $swapSection = LandingSection::where('sort_order', '>', $currentOrder)
+                ->orderBy('sort_order', 'asc')
+                ->first();
+        }
+
+        if ($swapSection) {
+            $section->sort_order = $swapSection->sort_order;
+            $swapSection->sort_order = $currentOrder;
+            
+            $section->save();
+            $swapSection->save();
+            
+            return back()->with('success', 'Order updated successfully.');
+        }
+
+        return back()->with('error', 'Already at the edge.');
     }
 
     public function edit(LandingSection $section)
@@ -54,7 +81,7 @@ class LandingSectionController extends Controller
                     $item['image_url'] = $existingGallery[$i]['image_url'];
                 }
                 
-                $item['is_large'] = $request->has("gallery.$i.is_large");
+                $item['is_large'] = $request->boolean("gallery.$i.is_large");
                 $finalGallery[$i] = $item;
             }
             
@@ -69,10 +96,42 @@ class LandingSectionController extends Controller
             $content['gallery'] = $finalGallery;
         }
 
-        // 3. Handle All Other Fields (Stats, Badge, Title, etc.)
-        $nonGalleryFields = $request->except(['_token', '_method', 'hero_image', 'logo_image', 'gallery']);
+        // 3. Handle Sosmed Items
+        if ($request->has('items')) {
+            $newItems = $request->input('items');
+            $existingItems = $content['items'] ?? [];
+            
+            $finalItems = [];
+            foreach ($newItems as $i => $item) {
+                if ($request->hasFile("items.$i.image")) {
+                    $file = $request->file("items.$i.image");
+                    if ($file->isValid()) {
+                        $path = $file->store('landing', 'public');
+                        $item['image_url'] = '/storage/' . $path;
+                    }
+                } elseif (isset($existingItems[$i]['image_url']) && !isset($item['image_url'])) {
+                    $item['image_url'] = $existingItems[$i]['image_url'];
+                }
+                $finalItems[$i] = $item;
+            }
+            $content['items'] = $finalItems;
+        }
+
+        // 4. Handle All Other Fields (Stats, Badge, Title, etc.)
+        $nonGalleryFields = $request->except(['_token', '_method', 'hero_image', 'logo_image', 'gallery', 'items', 'buttons']);
         foreach ($nonGalleryFields as $key => $value) {
             $content[$key] = $value;
+        }
+
+        // 5. Handle Dynamic Buttons
+        if ($request->has('buttons')) {
+            $buttons = collect($request->input('buttons'))
+                ->filter(fn($btn) => !empty($btn['text']))
+                ->values()
+                ->all();
+            $content['buttons'] = $buttons;
+        } else {
+            $content['buttons'] = [];
         }
 
         $section->content = $content;

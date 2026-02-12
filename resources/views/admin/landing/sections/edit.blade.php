@@ -59,10 +59,133 @@
                         <label class="block text-sm font-medium text-gray-700">Secondary Button Text</label>
                         <input type="text" name="secondary_button" value="{{ $section->content['secondary_button'] ?? '' }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Secondary Button URL</label>
-                        <input type="text" name="secondary_url" value="{{ $section->content['secondary_url'] ?? '#about' }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary">
+                </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
                     </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
+                </div>
+            </div>
+
+        @elseif($section->key == 'sosmed')
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Judul Seksi</label>
+                    <input type="text" name="title" value="{{ $section->content['title'] ?? '' }}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary">
+                </div>
+
+                <div x-data="{ items: {{ json_encode($section->content['items'] ?? []) }} }" class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-6">Item Media Sosial</label>
+                    <div class="space-y-6">
+                        <template x-for="(item, index) in items" :key="index">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative">
+                                <button type="button" @click="items.splice(index, 1)" class="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-gray-400 uppercase">Label (Contoh: Tiktok @umyfadillaa)</label>
+                                            <input type="text" :name="'items['+index+'][name]'" x-model="item.name" class="w-full p-2 border border-gray-100 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-gray-400 uppercase">Upload Gambar Screenshot</label>
+                                            <template x-if="item.image_url">
+                                                <div class="mb-2">
+                                                    <img :src="item.image_url" class="h-20 w-auto rounded border shadow-sm">
+                                                    <input type="hidden" :name="'items['+index+'][image_url]'" x-model="item.image_url">
+                                                </div>
+                                            </template>
+                                            <input type="file" :name="'items['+index+'][image]'" class="w-full text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-gray-400 uppercase text-center block mb-1">Icon Fallback (Bila gambar kosong)</label>
+                                            <div x-data="iconPicker(item.icon)" x-init="$watch('value', v => item.icon = v)" class="relative">
+                                                <button type="button" @click="toggle" class="w-full p-2 border border-gray-100 rounded-lg text-sm bg-white hover:bg-gray-50 flex items-center justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <iconify-icon x-show="value" :icon="value" class="text-primary"></iconify-icon>
+                                                        <span x-text="value || 'Pilih Icon'" :class="!value && 'text-gray-400 text-xs'"></span>
+                                                    </div>
+                                                    <i class="fas fa-search text-[10px] text-gray-300"></i>
+                                                </button>
+                                                <input type="hidden" :name="'items['+index+'][icon]'" x-model="value">
+                                                <div x-show="open" @click.away="close" class="absolute z-50 mt-1 p-4 bg-white border border-gray-200 rounded-xl shadow-xl left-0 w-64">
+                                                    <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                                                    <div class="icon-grid max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                                                        <template x-for="icon in filteredIcons()" :key="icon">
+                                                            <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
+                                                                <iconify-icon :icon="icon" class="text-lg text-gray-700"></iconify-icon>
+                                                            </button>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                            <input type="text" :name="'items['+index+'][button_text]'" x-model="item.button_text" class="w-full p-2 border border-gray-100 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-gray-400 uppercase">Link Tombol (URL)</label>
+                                            <input type="text" :name="'items['+index+'][button_url]'" x-model="item.button_url" class="w-full p-2 border border-gray-100 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="items.push({name: '', icon: 'lucide:link', image_url: '', button_text: 'Ikuti', button_url: '#'})" class="mt-6 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-2xl text-primary text-sm font-bold hover:bg-white/50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Item Sosmed
+                    </button>
+                </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
                 </div>
             </div>
 
@@ -114,12 +237,24 @@
                             <div class="flex justify-between items-start mb-4">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Item #{{ $i + 1 }}</label>
                                 <label class="flex items-center gap-1 cursor-pointer">
-                                    <input type="checkbox" name="gallery[{{ $i }}][is_large]" {{ (isset($item['is_large']) && $item['is_large']) ? 'checked' : '' }} class="hidden star-checkbox">
+                                    <input type="hidden" name="gallery[{{ $i }}][is_large]" value="0">
+
+<input type="checkbox"
+       name="gallery[{{ $i }}][is_large]"
+       value="1"
+       {{ !empty($item['is_large']) ? 'checked' : '' }}
+       class="hidden star-checkbox">
+
                                     <i onclick="
-                                        this.closest('form').querySelectorAll('.star-checkbox').forEach(cb => cb.checked = false);
-                                        this.closest('form').querySelectorAll('.fa-star').forEach(s => s.classList.replace('text-amber-400', 'text-gray-200'));
-                                        this.previousElementSibling.checked = true;
-                                        this.classList.replace('text-gray-200', 'text-amber-400');
+                                        let grid = this.closest('.grid');
+                                        grid.querySelectorAll('.star-checkbox').forEach(cb => cb.checked = false);
+                                        grid.querySelectorAll('.fa-star').forEach(s => {
+                                            s.classList.remove('text-amber-400');
+                                            s.classList.add('text-gray-200');
+                                        });
+                                        this.parentElement.querySelector('input').checked = true;
+                                        this.classList.remove('text-gray-200');
+                                        this.classList.add('text-amber-400');
                                     " class="fas fa-star transition-colors {{ (isset($item['is_large']) && $item['is_large']) ? 'text-amber-400' : 'text-gray-200' }} hover:text-amber-300" title="Jadikan Kotak Besar"></i>
                                 </label>
                             </div>
@@ -165,6 +300,32 @@
                         </div>
                         @endfor
                     </div>
+                </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
                 </div>
             </div>
 
@@ -218,6 +379,32 @@
                     </div>
                     @endforeach
                 </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
+                </div>
             </div>
 
         @elseif($section->key == 'explanation')
@@ -235,10 +422,32 @@
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Button Text</label>
                         <input type="text" name="button_text" value="{{ $section->content['button_text'] ?? '' }}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary">
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Button URL</label>
-                        <input type="text" name="button_url" value="{{ $section->content['button_url'] ?? '#products' }}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary">
+                </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
                     </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
                 </div>
             </div>
 
@@ -292,15 +501,31 @@
                     </div>
                     @endforeach
                 </div>
-                <div class="grid grid-cols-2 gap-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Register Button URL</label>
-                        <input type="text" name="register_url" value="{{ $section->content['register_url'] ?? route('register') }}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary">
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Login Button URL</label>
-                        <input type="text" name="login_url" value="{{ $section->content['login_url'] ?? route('login') }}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary">
-                    </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
                 </div>
             </div>
 
@@ -369,6 +594,32 @@
                         <i class="fas fa-plus mr-2"></i> Tambah Testimoni
                     </button>
                 </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
+                    </button>
+                </div>
             </div>
 
         @elseif($section->key == 'contact')
@@ -427,6 +678,32 @@
                     </div>
                     <button type="button" @click="channels.push({name: '', icon: '💬', url: ''})" class="mt-4 px-4 py-2 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-white/50 transition-colors w-full">
                         <i class="fas fa-plus mr-2"></i> Tambah Channel
+                    </button>
+                </div>
+
+                <div x-data="{ buttons: {{ json_encode($section->content['buttons'] ?? []) }} }" class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Tombol Aksi Tambahan (Opsional)</label>
+                    <div class="space-y-4">
+                        <template x-for="(btn, index) in buttons" :key="index">
+                            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm relative group">
+                                <div class="flex-1 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Teks Tombol</label>
+                                        <input type="text" :name="'buttons['+index+'][text]'" x-model="btn.text" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Link URL</label>
+                                        <input type="text" :name="'buttons['+index+'][url]'" x-model="btn.url" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                                <button type="button" @click="buttons.splice(index, 1)" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <button type="button" @click="buttons.push({text: '', url: '#'})" class="mt-4 px-4 py-3 bg-white border border-dashed border-gray-300 rounded-xl text-primary text-sm font-bold hover:bg-gray-50 transition-colors w-full">
+                        <i class="fas fa-plus mr-2"></i> Tambah Tombol Aksi
                     </button>
                 </div>
             </div>

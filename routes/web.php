@@ -49,6 +49,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Landing Page Sections
     Route::prefix('landing')->name('landing.')->group(function() {
         Route::resource('sections', \App\Http\Controllers\Admin\LandingSectionController::class)->only(['index', 'edit', 'update']);
+        Route::post('sections/{section}/reorder/{direction}', [\App\Http\Controllers\Admin\LandingSectionController::class, 'reorder'])->name('sections.reorder');
     });
 });
 

@@ -43,7 +43,7 @@ class LandingController extends Controller
         }
 
         $products = Product::take(4)->get();
-        $sections = \App\Models\LandingSection::all()->keyBy('key');
+        $sections = \App\Models\LandingSection::orderBy('sort_order', 'asc')->get()->keyBy('key');
         $settings = \App\Models\Setting::all()->pluck('value', 'key');
         
         return view('landing.online_viewer', compact('products', 'sections', 'settings'));
