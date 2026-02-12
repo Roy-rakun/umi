@@ -27,7 +27,7 @@
                 search: '',
                 value: initialValue,
                 icons: [],
-                filteredIcons: [],
+                filteredResults: [],
                 loading: false,
                 error: null,
 
@@ -35,7 +35,7 @@
                     this.$watch('search', (v) => this.filterIcons(v));
                     this.loading = true;
                     try {
-                        const response = await fetch('https://cdn.jsdelivr.net/npm/lucide-static@latest/icons.json');
+                        const response = await fetch('https://cdn.jsdelivr.net/npm/lucide-static@latest/icon-nodes.json');
                         if (!response.ok) throw new Error('Fetch failed');
                         const data = await response.json();
                         this.icons = Object.keys(data).map(name => `lucide:${name}`);
@@ -50,11 +50,11 @@
 
                 filterIcons(searchTerm) {
                     if (!searchTerm) {
-                        this.filteredIcons = this.icons.slice(0, 100);
+                        this.filteredResults = this.icons.slice(0, 100);
                         return;
                     }
                     const lower = searchTerm.toLowerCase();
-                    this.filteredIcons = this.icons.filter(icon => icon.toLowerCase().includes(lower)).slice(0, 100);
+                    this.filteredResults = this.icons.filter(icon => icon.toLowerCase().includes(lower)).slice(0, 100);
                 },
 
                 selectIcon(icon) {
@@ -63,7 +63,7 @@
                 },
 
                 filteredIcons() {
-                    return this.filteredIcons;
+                    return this.filteredResults;
                 },
 
                 toggle() {
