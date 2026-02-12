@@ -28,7 +28,7 @@ class ProductController extends Controller
             'type' => 'required|in:physical,digital',
             'weight' => 'required_if:type,physical|numeric',
             'product_image' => 'nullable|image|max:2048',
-            'icon' => 'nullable|string'
+            'icon' => 'nullable|string','description' => 'nullable|string'
         ]);
 
         $data = $request->except(['product_image']);
@@ -59,7 +59,7 @@ class ProductController extends Controller
             'type' => 'required|in:physical,digital',
             'weight' => 'required_if:type,physical|numeric',
             'product_image' => 'nullable|image|max:2048',
-            'icon' => 'nullable|string'
+            'icon' => 'nullable|string','description' => 'nullable|string'
         ]);
 
         $data = $request->except(['product_image']);
