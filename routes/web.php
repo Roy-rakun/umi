@@ -80,5 +80,3 @@ Route::prefix('api/regions')->group(function () {
 
 // Fallback for Dynamic Pages (Must be at the very end)
 Route::get('/{slug}', [LandingController::class, 'showPage'])->name('page.direct');
-捉
-
