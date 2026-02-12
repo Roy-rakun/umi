@@ -35,7 +35,7 @@
                     this.$watch('search', (v) => this.filterIcons(v));
                     this.loading = true;
                     try {
-                        const response = await fetch('https://unpkg.com/lucide-static@latest/icons.json');
+                        const response = await fetch('https://cdn.jsdelivr.net/npm/lucide-static@latest/icons.json');
                         if (!response.ok) throw new Error('Fetch failed');
                         const data = await response.json();
                         this.icons = Object.keys(data).map(name => `lucide:${name}`);
