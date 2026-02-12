@@ -42,7 +42,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
-    // Route::get('/fraud-logs', [AdminController::class, 'fraudLogs'])->name('fraud_logs'); // commented out as it caused issues
+    Route::get('/fraud-logs', [AdminController::class, 'fraudLogs'])->name('fraud_logs');
     Route::post('/notifications/read', [AdminController::class, 'markNotificationsAsRead'])->name('notifications.read');
     
 
