@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,14 +22,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // ✅ FORCE HTTPS (penting buat Vite & asset)
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         try {
             // Share settings with all views if table exists
-            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+            if (Schema::hasTable('settings')) {
                 $settings = \App\Models\Setting::all()->pluck('value', 'key');
-                \Illuminate\Support\Facades\View::share('settings', $settings);
+                View::share('settings', $settings);
             }
         } catch (\Exception $e) {
-            // Log::error('Failed to share settings: ' . $e->getMessage());
+            // biarin aman, ga usah crash
         }
     }
 }
