@@ -24,6 +24,7 @@
             <thead>
                 <tr class="bg-[#F8F5F0] text-[#8B7355] text-sm uppercase tracking-wider">
                     <th class="p-4 border-b font-semibold">Product ID</th>
+                    <th class="p-4 border-b font-semibold">Media</th>
                     <th class="p-4 border-b font-semibold">Name</th>
                     <th class="p-4 border-b font-semibold">Type</th>
                     <th class="p-4 border-b font-semibold">Price</th>
@@ -35,6 +36,19 @@
                 @forelse($products as $product)
                 <tr class="hover:bg-gray-50 border-b last:border-0 transition-colors">
                     <td class="p-4 font-mono text-xs">{{ $product->product_id }}</td>
+                    <td class="p-4">
+                        @if($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover rounded-lg border shadow-sm">
+                        @elseif($product->icon)
+                            <div class="w-10 h-10 flex items-center justify-center bg-gray-50 border rounded-lg text-primary">
+                                <iconify-icon icon="{{ $product->icon }}" class="text-xl"></iconify-icon>
+                            </div>
+                        @else
+                            <div class="w-10 h-10 flex items-center justify-center bg-gray-50 border rounded-lg text-gray-300">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        @endif
+                    </td>
                     <td class="p-4 font-medium text-[#2C3E50]">{{ $product->name }}</td>
                     <td class="p-4">
                         <span class="px-2 py-1 rounded text-xs font-bold {{ $product->type === 'physical' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">

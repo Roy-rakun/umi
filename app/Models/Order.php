@@ -20,6 +20,11 @@ class Order extends Model
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id', 'order_id');
+    }
+
     public function affiliate()
     {
         return $this->belongsTo(Affiliate::class, 'affiliate_id', 'affiliate_id');

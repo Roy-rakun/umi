@@ -23,6 +23,14 @@
             </div>
 
             <div class="mb-4">
+                <label class="flex items-center text-sm font-semibold text-gray-700">
+                    <input type="checkbox" name="is_academy" value="1" {{ $page->is_academy ? 'checked' : '' }} class="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50 mr-2">
+                    <span>Hanya untuk Academy (Affiliator)</span>
+                </label>
+                <p class="text-[10px] text-gray-400 mt-1 italic pl-6">Jika dicentang, halaman ini hanya akan muncul di dashboard Academy para affiliator.</p>
+            </div>
+
+            <div class="mb-4">
                 <label class="block text-sm text-gray-700 font-bold mb-2">
                     Slug (Cannot be changed)
                 </label>
@@ -39,7 +47,7 @@
                 <div class="text-xs text-gray-500 mb-2">
                     You can use HTML tags like &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;b&gt; for formatting.
                 </div>
-                <textarea class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-textarea" 
+                <textarea class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple form-textarea wysiwyg" 
                     rows="20" 
                     name="content" 
                     required>{{ old('content', $page->content) }}</textarea>
@@ -56,4 +64,14 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    ClassicEditor
+        .create(document.querySelector('.wysiwyg'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+@endpush
 @endsection

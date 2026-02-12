@@ -2,9 +2,14 @@
 
 @section('content')
 <div class="container px-6 mx-auto grid">
-    <h2 class="my-6 text-2xl font-semibold text-gray-700">
-        Page Management
-    </h2>
+    <div class="flex justify-between items-center my-6">
+        <h2 class="text-2xl font-semibold text-gray-700">
+            Page Management
+        </h2>
+        <a href="{{ route('admin.pages.create') }}" class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+            + Add New Page
+        </a>
+    </div>
 
     @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">

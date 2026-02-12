@@ -42,7 +42,10 @@ class LandingController extends Controller
         }
 
         $products = Product::take(4)->get();
-        return view('landing', compact('products'));
+        $sections = \App\Models\LandingSection::all()->keyBy('key');
+        $settings = \App\Models\Setting::all()->pluck('value', 'key');
+        
+        return view('landing.online_viewer', compact('products', 'sections', 'settings'));
     }
 
     public function products()
@@ -60,12 +63,37 @@ class LandingController extends Controller
     public function checkout(Request $request, $productId)
     {
         $product = Product::findOrFail($productId);
+        $allProducts = Product::where('product_id', '!=', $productId)->get();
+        $settings = \App\Models\Setting::all()->pluck('value', 'key');
         
-        // Simulasi data pembeli (Hardcoded for demo)
-        $buyerName = 'Guest Buyer ' . Str::random(4);
-        $buyerEmail = strtolower(Str::random(5)) . '@gmail.com';
+        return view('landing.checkout', compact('product', 'allProducts', 'settings'));
+    }
+
+    public function processCheckout(Request $request)
+    {
+        $settings = \App\Models\Setting::all()->pluck('value', 'key');
         
-        // Ambil affiliate ref dari cookie
+        // 1. Check Login Requirement
+        if (isset($settings['require_login_checkout']) && $settings['require_login_checkout'] == '1') {
+            if (!auth()->check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Silakan login terlebih dahulu.',
+                    'redirect' => route('login')
+                ], 401);
+            }
+        }
+
+        $cart = $request->input('cart');
+        $buyer = $request->input('buyer');
+
+        if (empty($cart)) {
+            return response()->json(['success' => false, 'message' => 'Keranjang kosong.'], 400);
+        }
+
+        $totalAmount = collect($cart)->sum(fn($item) => $item['price'] * $item['qty']);
+        
+        // 2. Affiliate Tracking
         $affiliateRef = Cookie::get('affiliate_ref');
         $affiliateId = null;
 
@@ -76,74 +104,35 @@ class LandingController extends Controller
             }
         }
 
-        // Create Order
+        // 3. Create Order
         $order = Order::create([
             'order_id' => 'ORD-' . strtoupper(Str::random(8)),
-            'product_id' => $product->product_id,
-            'affiliate_ref' => $affiliateRef, // Code yang dipakai
-            'affiliate_id' => $affiliateId,   // ID asli affiliate
-            'buyer_name' => $buyerName,
-            'buyer_email' => $buyerEmail,
-            'amount' => $product->price,
-            'payment_status' => 'paid', // Auto paid for demo
+            'product_id' => $cart[0]['product_id'], // Legacy support / Fallback
+            'affiliate_ref' => $affiliateRef, 
+            'affiliate_id' => $affiliateId,   
+            'buyer_name' => $buyer['name'],
+            'buyer_email' => $buyer['email'],
+            'buyer_phone' => $buyer['phone'] ?? null,
+            'amount' => $totalAmount,
+            'payment_status' => 'pending',
             'ip_address' => $request->ip(),
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
-        // Notify Admins
-        $admins = User::where('role', 'admin')->get();
-        Notification::send($admins, new NewOrderNotification($order));
-
-        // Calculate Commission if affiliate exists
-        if ($affiliateId) {
-            $affiliateUser = $affiliate->user; // Relation defined in Affiliate model
-            
-            // 1. SELF-ORDER FRAUD CHECK
-            // Check if buyer email matches affiliate email
-            if ($buyerEmail === $affiliateUser->email) {
-                // Log Fraud
-                \App\Models\FraudLog::create([
-                    'affiliate_id' => $affiliateId,
-                    'order_id' => $order->order_id,
-                    'fraud_type' => 'self_order',
-                    'evidence_data' => json_encode(['buyer_email' => $buyerEmail, 'affiliate_email' => $affiliateUser->email]),
-                    'action_taken' => 'commission_rejected'
-                ]);
-
-                // Create Rejected Commission Record
-                Commission::create([
-                    'commission_id' => 'COM-' . strtoupper(Str::random(8)),
-                    'order_id' => $order->order_id,
-                    'affiliate_id' => $affiliateId,
-                    'product_id' => $product->product_id,
-                    'commission_amount' => 0,
-                    'status' => 'rejected',
-                    'rejection_reason' => 'Self-order detected',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            
-            } else {
-                // 2. VALID COMMISSION LOGIC
-                // Commission will be created via Webhook when status is PAID
-                // But we can check if it's inner/outer here just for validation if needed
-                
-                // $commissionAmount = ($affiliate->level === 'inner') 
-                //    ? $product->commission_inner 
-                //    : $product->commission_outer;
-    
-                // Commission::create([...]); -> MOVED TO WEBHOOK
-                
-                // Update total commission stats in Affiliate table -> MOVED TO WEBHOOK
-            }
+        // 4. Create Order Items
+        foreach ($cart as $item) {
+            OrderItem::create([
+                'order_id' => $order->order_id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['qty'],
+                'price' => $item['price'],
+                'subtotal' => $item['price'] * $item['qty'],
+            ]);
         }
 
-        // --- PAYMENT INTEGRATION ---
-        
+        // 5. Payment Integration (Mayar)
         try {
             $mayarService = new \App\Services\MayarService();
-            $paymentData = $mayarService->createPaymentLink($order, $buyerName, $buyerEmail);
+            $paymentData = $mayarService->createPaymentLink($order, $buyer['name'], $buyer['email']);
             
             if ($paymentData && isset($paymentData['link'])) {
                 $order->update([
@@ -151,14 +140,20 @@ class LandingController extends Controller
                     'external_id' => $paymentData['id'] ?? null,
                 ]);
                 
-                return redirect($paymentData['link']);
+                // Notify Admin
+                $admins = User::where('role', 'admin')->get();
+                Notification::send($admins, new NewOrderNotification($order));
+                
+                return response()->json([
+                    'success' => true,
+                    'payment_link' => $paymentData['link']
+                ]);
             }
         } catch (\Exception $e) {
-            // Log error or fallback
             \Illuminate\Support\Facades\Log::error('Mayar Payment Error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal membuat link pembayaran: ' . $e->getMessage()], 500);
         }
 
-        // Fallback or Demo Mode (If no API key or error)
-        return redirect('/')->with('success', "Order placed successfully! Order ID: {$order->order_id}. Please complete your payment.");
+        return response()->json(['success' => false, 'message' => 'Gagal memproses pembayaran.'], 500);
     }
 }

@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <form action="{{ route('admin.products.update', $product->product_id) }}" method="POST">
+    <form action="{{ route('admin.products.update', $product->product_id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -19,6 +19,46 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
                 <input type="text" name="name" value="{{ $product->name }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                    @if($product->image_url)
+                        <div class="mb-2">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-20 w-auto rounded border shadow-sm">
+                        </div>
+                    @endif
+                    <input type="file" name="product_image" class="w-full p-1 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355] text-sm file:mr-4 file:py-1 file:px-4 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                    <p class="text-[10px] text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Fallback Icon</label>
+                    <div x-data="iconPicker('{{ $product->icon }}')" class="relative">
+                        <div class="flex items-center space-x-2">
+                            <button type="button" @click="toggle" class="p-2 border border-gray-300 rounded bg-white hover:bg-gray-50 flex items-center justify-center min-w-[42px] h-[42px]">
+                                <iconify-icon x-show="value" :icon="value" class="text-xl text-primary"></iconify-icon>
+                                <i x-show="!value" class="fas fa-search text-gray-400"></i>
+                            </button>
+                            <input type="hidden" name="icon" x-model="value">
+                            <span class="text-xs text-gray-500 italic">Digunakan jika foto tidak ada</span>
+                        </div>
+                        
+                        <div x-show="open" @click.away="close" class="absolute z-50 mt-2 p-4 bg-white border border-gray-200 rounded-xl shadow-xl w-64">
+                            <input type="text" x-data="{ search: '' }" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                            <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                                <template x-for="icon in filteredIcons()" :key="icon">
+                                    <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
+                                        <iconify-icon :icon="icon" class="text-lg text-gray-700"></iconify-icon>
+                                    </button>
+                                </template>
+                            </div>
+                            <div x-show="loading" class="text-center py-4">
+                                <i class="fas fa-spinner fa-spin text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="grid grid-cols-2 gap-6">

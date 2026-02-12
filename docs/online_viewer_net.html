@@ -1,0 +1,709 @@
+Put your HTML text here<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Secret by Umy Fadilla</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Nunito+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --color-bg: #fff7f6;
+      --color-surface: #ffffff;
+      --color-text: #4a3f3f;
+      --color-primary: #7d2a2a;
+      --color-secondary: #d4a574;
+    }
+    
+    * {
+      scroll-behavior: smooth;
+    }
+    
+    .font-heading {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    
+    .font-body {
+      font-family: 'Nunito Sans', sans-serif;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 1s ease-out forwards;
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(125, 42, 42, 0.2);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(125, 42, 42, 0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--color-primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .card-soft {
+      background: var(--color-surface);
+      box-shadow: 0 8px 30px rgba(74, 63, 63, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    .card-soft:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(74, 63, 63, 0.12);
+    }
+    
+    .wax-seal {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(145deg, #8b3a3a, #6b2020);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 8px 30px rgba(125, 42, 42, 0.4),
+        inset 0 2px 10px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    
+    .wax-seal::before {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+    }
+    
+    .section-padding {
+      padding: 80px 24px;
+    }
+    
+    @media (min-width: 768px) {
+      .section-padding {
+        padding: 120px 48px;
+      }
+    }
+    
+    .product-image {
+      background: linear-gradient(135deg, #f5e6e0 0%, #e8d5cf 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    
+    .gallery-item {
+      background: linear-gradient(135deg, #f8ece8 0%, #f0ddd7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body" style="background-color: var(--color-bg); color: var(--color-text);">
+  <div id="app-wrapper" class="w-full h-full overflow-auto"><!-- Navigation -->
+   <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-95 backdrop-blur-sm" style="background-color: var(--color-bg);">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-heading font-bold" style="background: linear-gradient(145deg, #8b3a3a, #6b2020);">
+       TS
+      </div><span class="font-heading text-xl font-semibold" style="color: var(--color-primary);">The Secret</span>
+     </div>
+     <div class="hidden md:flex items-center gap-8 text-sm"><a href="#about" class="hover:opacity-70 transition-opacity">Tentang</a> <a href="#products" class="hover:opacity-70 transition-opacity">Produk</a> <a href="#affiliate" class="hover:opacity-70 transition-opacity">Affiliate</a> <a href="#contact" class="hover:opacity-70 transition-opacity">Kontak</a>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <section class="min-h-screen flex items-center section-padding pt-24 md:pt-32">
+    <div class="max-w-7xl mx-auto w-full">
+     <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center"><!-- Left: Image -->
+      <div class="animate-fade-in-up order-2 md:order-1">
+       <div class="relative">
+        <div class="aspect-[3/4] rounded-3xl overflow-hidden card-soft max-w-md mx-auto">
+         <div class="w-full h-full bg-gradient-to-br from-rose-100 to-amber-50 flex items-center justify-content-center p-8">
+          <svg viewbox="0 0 200 280" class="w-full h-full"><defs>
+            <lineargradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+             <stop offset="0%" style="stop-color:#f5d5c8" />
+             <stop offset="100%" style="stop-color:#e8c4b8" />
+            </lineargradient>
+            <lineargradient id="hijabGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+             <stop offset="0%" style="stop-color:#8b3a3a" />
+             <stop offset="100%" style="stop-color:#6b2020" />
+            </lineargradient>
+            <lineargradient id="dressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+             <stop offset="0%" style="stop-color:#f8f4f2" />
+             <stop offset="100%" style="stop-color:#e8e0dc" />
+            </lineargradient>
+           </defs> <!-- Dress/Body --> <ellipse cx="100" cy="240" rx="60" ry="50" fill="url(#dressGrad)" /> <rect x="50" y="140" width="100" height="110" rx="20" fill="url(#dressGrad)" /> <!-- Neck --> <rect x="85" y="95" width="30" height="25" fill="url(#skinGrad)" /> <!-- Hijab --> <ellipse cx="100" cy="65" rx="55" ry="50" fill="url(#hijabGrad)" /> <path d="M45 65 Q45 140 70 180 L130 180 Q155 140 155 65" fill="url(#hijabGrad)" /> <!-- Face --> <ellipse cx="100" cy="75" rx="35" ry="40" fill="url(#skinGrad)" /> <!-- Eyes --> <ellipse cx="85" cy="70" rx="5" ry="3" fill="#3d2d2d" /> <ellipse cx="115" cy="70" rx="5" ry="3" fill="#3d2d2d" /> <!-- Eyebrows --> <path d="M78 62 Q85 59 92 62" stroke="#5d4040" stroke-width="1.5" fill="none" /> <path d="M108 62 Q115 59 122 62" stroke="#5d4040" stroke-width="1.5" fill="none" /> <!-- Nose --> <path d="M100 72 L100 82 Q98 85 100 85 Q102 85 100 82" stroke="#d4b0a0" stroke-width="1" fill="none" /> <!-- Smile --> <path d="M90 92 Q100 100 110 92" stroke="#c49080" stroke-width="2" fill="none" stroke-linecap="round" /> <!-- Blush --> <ellipse cx="78" cy="85" rx="8" ry="4" fill="#f0c0b0" opacity="0.5" /> <ellipse cx="122" cy="85" rx="8" ry="4" fill="#f0c0b0" opacity="0.5" /> <!-- Hands --> <ellipse cx="55" cy="200" rx="15" ry="12" fill="url(#skinGrad)" /> <ellipse cx="145" cy="200" rx="15" ry="12" fill="url(#skinGrad)" /> <!-- Decorative elements --> <circle cx="100" cy="140" r="8" fill="url(#hijabGrad)" opacity="0.3" />
+          </svg>
+         </div>
+        </div>
+        <div class="absolute -bottom-4 -right-4 w-20 h-20 rounded-full animate-float" style="background: linear-gradient(135deg, #d4a574 0%, #c49060 100%); opacity: 0.6;"></div>
+       </div>
+      </div><!-- Right: Content -->
+      <div class="order-1 md:order-2 text-center md:text-left">
+       <div class="wax-seal mx-auto md:mx-0 mb-8 animate-fade-in">
+        <div class="text-center text-white"><span class="font-heading text-2xl font-bold block">TS</span> <span class="text-[10px] tracking-widest opacity-80">THE SECRET</span>
+        </div>
+       </div>
+       <h1 id="hero-headline" class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 animate-fade-in-up delay-100" style="color: var(--color-primary);">Rahasia Keajaiban Do'a &amp; Keberlimpahan Berkah</h1>
+       <p id="hero-tagline" class="text-lg md:text-xl leading-relaxed mb-10 opacity-80 animate-fade-in-up delay-200">Apakah kamu merasa lelah dengan usaha yang belum membuahkan hasil? Merasa doa-doamu belum terjawab? Kamu tidak sendirian. Temukan rahasia menyelaraskan hati dan jiwa untuk menerima keberlimpahan yang telah Allah sediakan untukmu.</p>
+       <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start animate-fade-in-up delay-300"><a href="#products" class="btn-primary px-8 py-4 rounded-2xl font-semibold text-center"> Gabung Sekarang </a> <a href="#about" class="btn-secondary px-8 py-4 rounded-2xl font-semibold text-center"> Pelajari Lebih Lanjut </a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Problem & Empathy Section -->
+   <section class="section-padding" style="background: linear-gradient(180deg, #fef5f3 0%, #fff7f6 100%);">
+    <div class="max-w-6xl mx-auto">
+     <h2 class="font-heading text-3xl md:text-4xl font-bold text-center mb-16" style="color: var(--color-primary);">Merasa Hidup Terasa Berat dan Stagnan?</h2>
+     <div class="grid md:grid-cols-3 gap-8"><!-- Card 1 -->
+      <div class="card-soft rounded-3xl p-8 text-center">
+       <div class="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #fef5f3 0%, #f8ece8 100%);">
+        <svg class="w-10 h-10" fill="none" viewbox="0 0 24 24" stroke="currentColor" style="color: var(--color-primary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-xl font-semibold mb-4" style="color: var(--color-primary);">Sudah Berusaha Keras</h3>
+       <p class="opacity-70 leading-relaxed">Kamu sudah bekerja keras, belajar banyak hal, tapi hasilnya belum sesuai harapan. Merasa seperti ada yang kurang.</p>
+      </div><!-- Card 2 -->
+      <div class="card-soft rounded-3xl p-8 text-center">
+       <div class="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #fef5f3 0%, #f8ece8 100%);">
+        <svg class="w-10 h-10" fill="none" viewbox="0 0 24 24" stroke="currentColor" style="color: var(--color-primary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-xl font-semibold mb-4" style="color: var(--color-primary);">Doa Belum Terwujud</h3>
+       <p class="opacity-70 leading-relaxed">Sudah berdoa dengan sungguh-sungguh, tapi merasa seperti doa belum sampai. Ada kesenjangan antara harapan dan kenyataan.</p>
+      </div><!-- Card 3 -->
+      <div class="card-soft rounded-3xl p-8 text-center">
+       <div class="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #fef5f3 0%, #f8ece8 100%);">
+        <svg class="w-10 h-10" fill="none" viewbox="0 0 24 24" stroke="currentColor" style="color: var(--color-primary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
+        </svg>
+       </div>
+       <h3 class="font-heading text-xl font-semibold mb-4" style="color: var(--color-primary);">Lelah &amp; Kehilangan Arah</h3>
+       <p class="opacity-70 leading-relaxed">Merasa lelah, kehilangan motivasi, dan tidak tahu harus mulai dari mana untuk memperbaiki keadaan.</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- About Section -->
+   <section id="about" class="section-padding">
+    <div class="max-w-7xl mx-auto">
+     <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center"><!-- Left: Content -->
+      <div><span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-6" style="background-color: #fef5f3; color: var(--color-primary);">Tentang Mentor</span>
+       <h2 id="about-title" class="font-heading text-3xl md:text-4xl font-bold mb-6" style="color: var(--color-primary);">Umy Fadilla</h2>
+       <div class="space-y-4 leading-relaxed opacity-80">
+        <p>Umy Fadilla adalah seorang praktisi spiritual dan mentor transformasi diri yang telah membantu ribuan orang menemukan keselarasan antara hati, pikiran, dan tindakan mereka.</p>
+        <p>Dengan pendekatan yang menggabungkan nilai-nilai Islam dan pemahaman mendalam tentang energi spiritual, Umy membimbing setiap individu untuk membuka pintu keberlimpahan yang telah Allah sediakan.</p>
+        <p>Melalui program "The Secret", Umy berbagi rahasia bagaimana menyiapkan hati dan jiwa agar doa-doa kita tidak hanya diucapkan, tetapi benar-benar terhubung dengan Sang Pencipta.</p>
+       </div>
+       <div class="flex items-center gap-6 mt-8">
+        <div class="text-center"><span class="font-heading text-3xl font-bold block" style="color: var(--color-primary);">5000+</span> <span class="text-sm opacity-60">Alumni</span>
+        </div>
+        <div class="w-px h-12 bg-current opacity-20"></div>
+        <div class="text-center"><span class="font-heading text-3xl font-bold block" style="color: var(--color-primary);">50+</span> <span class="text-sm opacity-60">Kelas</span>
+        </div>
+        <div class="w-px h-12 bg-current opacity-20"></div>
+        <div class="text-center"><span class="font-heading text-3xl font-bold block" style="color: var(--color-primary);">4.9</span> <span class="text-sm opacity-60">Rating</span>
+        </div>
+       </div>
+      </div><!-- Right: Gallery -->
+      <div class="grid grid-cols-3 gap-3">
+       <div class="gallery-item aspect-square rounded-2xl">
+        📿
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl">
+        🕌
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl">
+        ✨
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl">
+        📖
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl col-span-2 row-span-2 text-4xl">
+        🤲
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl">
+        💫
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl">
+        🌙
+       </div>
+       <div class="gallery-item aspect-square rounded-2xl">
+        ❤️
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Program Explanation Section -->
+   <section class="section-padding" style="background: linear-gradient(180deg, #fef5f3 0%, #fff7f6 100%);">
+    <div class="max-w-4xl mx-auto text-center">
+     <div class="wax-seal mx-auto mb-10 animate-float">
+      <div class="text-center text-white"><span class="font-heading text-2xl font-bold block">TS</span> <span class="text-[10px] tracking-widest opacity-80">THE SECRET</span>
+      </div>
+     </div>
+     <h2 class="font-heading text-3xl md:text-4xl font-bold mb-8" style="color: var(--color-primary);">Menguak Rahasia Keajaiban Do'a</h2>
+     <div class="space-y-6 leading-relaxed opacity-80 mb-10">
+      <p>Pernahkah kamu bertanya mengapa sebagian doa terasa begitu mudah terkabul, sementara yang lain seakan tak sampai? Jawabannya bukan pada banyaknya kata atau lamanya sujud.</p>
+      <p><strong style="color: var(--color-primary);">Rahasia sejati terletak pada keselarasan batin.</strong> Ketika hati, pikiran, dan jiwa kita selaras dengan apa yang kita minta, pintu-pintu keberlimpahan mulai terbuka.</p>
+      <p>Program "The Secret" akan membimbingmu untuk membersihkan hati dari penghalang-penghalang tersembunyi, menyiapkan wadah jiwamu untuk menerima berkah, dan menghubungkan setiap doamu langsung ke langit.</p>
+     </div><a href="#products" class="btn-primary inline-block px-10 py-4 rounded-2xl font-semibold"> Mulai Perjalanan Spiritualmu </a>
+    </div>
+   </section><!-- Products Section -->
+   <section id="products" class="section-padding">
+    <div class="max-w-7xl mx-auto">
+     <div class="text-center mb-16"><span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background-color: #fef5f3; color: var(--color-primary);">Koleksi Eksklusif</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold" style="color: var(--color-primary);">Produk &amp; Program The Secret</h2>
+     </div>
+     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Product 1: Kelas Khusus -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        🎓
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Kelas Khusus</h3>
+        <p class="text-sm opacity-70 mb-4">Program intensif untuk memahami rahasia doa yang mustajab dan transformasi spiritual mendalam.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 750.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 2: Kelas Private -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        👤
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Kelas Private</h3>
+        <p class="text-sm opacity-70 mb-4">Sesi personal dengan Umy Fadilla untuk bimbingan spiritual eksklusif sesuai kebutuhanmu.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 2.500.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 3: Tasbih Crystal -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        📿
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Tasbih Crystal Booster Aura</h3>
+        <p class="text-sm opacity-70 mb-4">Tasbih kristal premium untuk meningkatkan energi spiritual dan fokus dalam berdzikir.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 450.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 4: Gelang Moonstone -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        🌙
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Gelang Permata Moonstone</h3>
+        <p class="text-sm opacity-70 mb-4">Gelang moonstone untuk keseimbangan emosi dan peningkatan intuisi spiritual.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 385.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 5: Gelang Sapphire -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        💎
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Gelang Permata Sapphire</h3>
+        <p class="text-sm opacity-70 mb-4">Sapphire untuk kebijaksanaan, perlindungan spiritual, dan ketenangan jiwa.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 525.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 6: Gelang Apatite -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        🔮
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Gelang Permata Apatite</h3>
+        <p class="text-sm opacity-70 mb-4">Apatite untuk manifestasi, motivasi, dan membangkitkan potensi diri.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 425.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 7: Parfum Gazla 555 -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        🌸
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Parfum Gazla 555</h3>
+        <p class="text-sm opacity-70 mb-4">Wewangian spiritual untuk meningkatkan aura positif dan ketenangan batin.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 295.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 8: Parfum Gazla 333 -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        🌺
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Parfum Gazla 333</h3>
+        <p class="text-sm opacity-70 mb-4">Formula khusus untuk menarik kelimpahan rezeki dan keberkahan.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 295.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div><!-- Product 9: Parfum Soul -->
+      <div class="card-soft rounded-3xl overflow-hidden">
+       <div class="product-image aspect-video">
+        ✨
+       </div>
+       <div class="p-6">
+        <h3 class="font-heading text-xl font-semibold mb-2" style="color: var(--color-primary);">Parfum Soul</h3>
+        <p class="text-sm opacity-70 mb-4">Wewangian eksklusif untuk ketenangan jiwa dan koneksi spiritual mendalam.</p>
+        <div class="flex items-center justify-between"><span class="font-heading text-xl font-bold" style="color: var(--color-primary);">Rp 350.000</span> <button class="btn-primary px-5 py-2 rounded-xl text-sm">Beli Sekarang</button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Affiliate Section -->
+   <section id="affiliate" class="section-padding" style="background: linear-gradient(180deg, #f5ebe8 0%, #f8f0ed 100%);">
+    <div class="max-w-5xl mx-auto">
+     <div class="text-center mb-12"><span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background-color: #fff7f6; color: var(--color-primary);">Peluang Berberkah</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--color-primary);">Program Affiliate The Secret</h2>
+      <p class="max-w-2xl mx-auto opacity-80">Sebarkan kebaikan dan dapatkan rezeki halal. Bergabunglah menjadi affiliate kami dan bantu orang lain menemukan jalan spiritual mereka.</p>
+     </div>
+     <div class="grid md:grid-cols-3 gap-6 mb-10">
+      <div class="card-soft rounded-3xl p-6 text-center">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #fef5f3 0%, #f8ece8 100%);"><span class="text-2xl">💰</span>
+       </div>
+       <h3 class="font-heading text-lg font-semibold mb-2" style="color: var(--color-primary);">Komisi Menarik</h3>
+       <p class="text-sm opacity-70">Dapatkan komisi hingga 20% dari setiap penjualan yang kamu hasilkan.</p>
+      </div>
+      <div class="card-soft rounded-3xl p-6 text-center">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #fef5f3 0%, #f8ece8 100%);"><span class="text-2xl">📊</span>
+       </div>
+       <h3 class="font-heading text-lg font-semibold mb-2" style="color: var(--color-primary);">Dashboard Tracking</h3>
+       <p class="text-sm opacity-70">Pantau performa dan penghasilanmu dengan dashboard yang mudah digunakan.</p>
+      </div>
+      <div class="card-soft rounded-3xl p-6 text-center">
+       <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #fef5f3 0%, #f8ece8 100%);"><span class="text-2xl">🛡️</span>
+       </div>
+       <h3 class="font-heading text-lg font-semibold mb-2" style="color: var(--color-primary);">Sistem Aman</h3>
+       <p class="text-sm opacity-70">Transparan dan terpercaya dengan pembayaran tepat waktu setiap bulan.</p>
+      </div>
+     </div>
+     <div class="flex flex-col sm:flex-row gap-4 justify-center"><a href="#" class="btn-primary px-8 py-4 rounded-2xl font-semibold text-center"> Daftar Affiliate </a> <a href="#" class="btn-secondary px-8 py-4 rounded-2xl font-semibold text-center"> Login Affiliate </a>
+     </div>
+    </div>
+   </section><!-- Testimonial Section -->
+   <section class="section-padding">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-16"><span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background-color: #fef5f3; color: var(--color-primary);">Testimoni</span>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold" style="color: var(--color-primary);">Kisah Transformasi Mereka</h2>
+     </div>
+     <div class="grid md:grid-cols-3 gap-8"><!-- Testimonial 1 -->
+      <div class="card-soft rounded-3xl p-8 relative">
+       <div class="absolute -top-4 left-8 text-6xl font-heading" style="color: var(--color-primary); opacity: 0.2;">
+        "
+       </div>
+       <p class="italic opacity-80 mb-6 relative z-10">Setelah mengikuti kelas Umy, hidup saya berubah total. Doa-doa yang dulu terasa hampa, kini terasa begitu dekat dan penuh makna. Rezeki pun mengalir dari arah yang tidak terduga.</p>
+       <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #f8ece8 0%, #f0ddd7 100%);">
+         👩
+        </div>
+        <div>
+         <div class="font-semibold" style="color: var(--color-primary);">
+          Siti Nurhaliza
+         </div>
+         <div class="text-sm opacity-60">
+          Pengusaha, Jakarta
+         </div>
+        </div>
+       </div>
+      </div><!-- Testimonial 2 -->
+      <div class="card-soft rounded-3xl p-8 relative">
+       <div class="absolute -top-4 left-8 text-6xl font-heading" style="color: var(--color-primary); opacity: 0.2;">
+        "
+       </div>
+       <p class="italic opacity-80 mb-6 relative z-10">Alhamdulillah, saya menemukan ketenangan yang selama ini saya cari. Kelas private dengan Umy membantu saya memahami apa yang menghalangi doa saya selama ini.</p>
+       <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #f8ece8 0%, #f0ddd7 100%);">
+         👩‍💼
+        </div>
+        <div>
+         <div class="font-semibold" style="color: var(--color-primary);">
+          Anisa Rahma
+         </div>
+         <div class="text-sm opacity-60">
+          Karyawan, Bandung
+         </div>
+        </div>
+       </div>
+      </div><!-- Testimonial 3 -->
+      <div class="card-soft rounded-3xl p-8 relative">
+       <div class="absolute -top-4 left-8 text-6xl font-heading" style="color: var(--color-primary); opacity: 0.2;">
+        "
+       </div>
+       <p class="italic opacity-80 mb-6 relative z-10">Produk-produk The Secret sangat membantu saya fokus dalam ibadah. Tasbih kristalnya indah dan membawa energi positif yang terasa berbeda saat berdzikir.</p>
+       <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #f8ece8 0%, #f0ddd7 100%);">
+         👩‍🏫
+        </div>
+        <div>
+         <div class="font-semibold" style="color: var(--color-primary);">
+          Dewi Safitri
+         </div>
+         <div class="text-sm opacity-60">
+          Guru, Surabaya
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Contact Section -->
+   <section id="contact" class="section-padding" style="background: linear-gradient(180deg, #fef5f3 0%, #fff7f6 100%);">
+    <div class="max-w-4xl mx-auto text-center">
+     <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--color-primary);">Hubungi Kami</h2>
+     <p class="opacity-80 mb-10">Ada pertanyaan? Jangan ragu untuk menghubungi kami melalui channel resmi di bawah ini.</p>
+     <div class="flex flex-wrap justify-center gap-4 mb-8"><a href="#" target="_blank" rel="noopener noreferrer" class="card-soft rounded-2xl px-6 py-4 flex items-center gap-3 hover:scale-105 transition-transform"> <span class="text-2xl">💬</span> <span class="font-medium">WhatsApp</span> </a> <a href="https://instagram.com/umyfadilla" target="_blank" rel="noopener noreferrer" class="card-soft rounded-2xl px-6 py-4 flex items-center gap-3 hover:scale-105 transition-transform"> <span class="text-2xl">📷</span> <span class="font-medium">@umyfadilla</span> </a> <a href="https://tiktok.com/@umyfadillaa" target="_blank" rel="noopener noreferrer" class="card-soft rounded-2xl px-6 py-4 flex items-center gap-3 hover:scale-105 transition-transform"> <span class="text-2xl">🎵</span> <span class="font-medium">@umyfadillaa</span> </a> <a href="https://youtube.com/@UmyFadilla29" target="_blank" rel="noopener noreferrer" class="card-soft rounded-2xl px-6 py-4 flex items-center gap-3 hover:scale-105 transition-transform"> <span class="text-2xl">▶️</span> <span class="font-medium">@UmyFadilla29</span> </a>
+     </div>
+     <p class="text-sm opacity-60 card-soft inline-block px-4 py-2 rounded-xl">⚠️ Akun resmi hanya yang tercantum di atas. Hati-hati terhadap penipuan.</p>
+    </div>
+   </section><!-- Footer -->
+   <footer class="py-8 px-6" style="background-color: #f0e6e3;">
+    <div class="max-w-6xl mx-auto">
+     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-heading font-bold" style="background: linear-gradient(145deg, #8b3a3a, #6b2020);">
+        TS
+       </div><span class="font-heading font-semibold" style="color: var(--color-primary);">The Secret by Umy Fadilla</span>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-sm opacity-70"><a href="#" class="hover:opacity-100 transition-opacity">Privacy Policy</a> <a href="#" class="hover:opacity-100 transition-opacity">Terms &amp; Conditions</a> <a href="#" class="hover:opacity-100 transition-opacity">Affiliate Agreement</a>
+      </div>
+      <p class="text-sm opacity-60">© 2024 The Secret. All rights reserved.</p>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: '#fff7f6',
+      surface_color: '#ffffff',
+      text_color: '#4a3f3f',
+      primary_color: '#7d2a2a',
+      secondary_color: '#d4a574',
+      font_family: 'Cormorant Garamond',
+      font_size: 16,
+      hero_headline: "Rahasia Keajaiban Do'a & Keberlimpahan Berkah",
+      hero_tagline: "Apakah kamu merasa lelah dengan usaha yang belum membuahkan hasil? Merasa doa-doamu belum terjawab? Kamu tidak sendirian. Temukan rahasia menyelaraskan hati dan jiwa untuk menerima keberlimpahan yang telah Allah sediakan untukmu.",
+      about_title: "Umy Fadilla",
+      whatsapp_number: "+62"
+    };
+
+    let config = { ...defaultConfig };
+
+    function updateUI(cfg) {
+      // Update CSS variables
+      document.documentElement.style.setProperty('--color-bg', cfg.background_color || defaultConfig.background_color);
+      document.documentElement.style.setProperty('--color-surface', cfg.surface_color || defaultConfig.surface_color);
+      document.documentElement.style.setProperty('--color-text', cfg.text_color || defaultConfig.text_color);
+      document.documentElement.style.setProperty('--color-primary', cfg.primary_color || defaultConfig.primary_color);
+      document.documentElement.style.setProperty('--color-secondary', cfg.secondary_color || defaultConfig.secondary_color);
+
+      // Update text content
+      const heroHeadline = document.getElementById('hero-headline');
+      if (heroHeadline) heroHeadline.textContent = cfg.hero_headline || defaultConfig.hero_headline;
+
+      const heroTagline = document.getElementById('hero-tagline');
+      if (heroTagline) heroTagline.textContent = cfg.hero_tagline || defaultConfig.hero_tagline;
+
+      const aboutTitle = document.getElementById('about-title');
+      if (aboutTitle) aboutTitle.textContent = cfg.about_title || defaultConfig.about_title;
+
+      // Update font family
+      const fontFamily = cfg.font_family || defaultConfig.font_family;
+      document.querySelectorAll('.font-heading').forEach(el => {
+        el.style.fontFamily = `${fontFamily}, serif`;
+      });
+
+      // Update font sizes
+      const baseSize = cfg.font_size || defaultConfig.font_size;
+      document.body.style.fontSize = `${baseSize}px`;
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      updateUI(config);
+    }
+
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              cfg.background_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => cfg.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              cfg.surface_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              cfg.text_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => cfg.primary_color || defaultConfig.primary_color,
+            set: (value) => {
+              cfg.primary_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ primary_color: value });
+            }
+          },
+          {
+            get: () => cfg.secondary_color || defaultConfig.secondary_color,
+            set: (value) => {
+              cfg.secondary_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ secondary_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => cfg.font_family || defaultConfig.font_family,
+          set: (value) => {
+            cfg.font_family = value;
+            if (window.elementSdk) window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => cfg.font_size || defaultConfig.font_size,
+          set: (value) => {
+            cfg.font_size = value;
+            if (window.elementSdk) window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['hero_headline', cfg.hero_headline || defaultConfig.hero_headline],
+        ['hero_tagline', cfg.hero_tagline || defaultConfig.hero_tagline],
+        ['about_title', cfg.about_title || defaultConfig.about_title],
+        ['whatsapp_number', cfg.whatsapp_number || defaultConfig.whatsapp_number]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Initial UI update
+    updateUI(config);
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('section').forEach(section => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'all 0.6s ease-out';
+      observer.observe(section);
+    });
+
+    // Make first section visible immediately
+    const firstSection = document.querySelector('section');
+    if (firstSection) {
+      firstSection.style.opacity = '1';
+      firstSection.style.transform = 'translateY(0)';
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cc1779a060dff7d',t:'MTc3MDc4Nzk2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

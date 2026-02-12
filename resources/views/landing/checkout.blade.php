@@ -1,273 +1,279 @@
-@extends('layouts.app') 
-@section('title', 'Checkout - ' . $product->name)
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - {{ $settings['site_name'] ?? 'The Secret' }}</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+    <style>
+        :root {
+            --color-bg: #fff7f6;
+            --color-surface: #ffffff;
+            --color-text: #4a3f3f;
+            --color-primary: #7d2a2a;
+            --color-secondary: #d4a574;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .font-heading {
+            font-family: 'Cormorant Garamond', serif;
+        }
+    </style>
+</head>
+<body class="h-full bg-[#fff7f6]">
+    <div x-data="checkoutPage({
+        initialProduct: {{ json_encode($product) }},
+        allProducts: {{ json_encode($allProducts) }},
+        settings: {{ json_encode($settings) }},
+        isLoggedIn: {{ auth()->check() ? 'true' : 'false' }},
+        loginUrl: '{{ route('login') }}'
+    })" class="max-w-5xl mx-auto px-4 py-12">
         
-        <!-- Product Summary (Left/Top) -->
-        <div class="md:w-1/3 bg-gray-50 p-6 border-r border-gray-200">
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Order Summary</h3>
-            <div class="flex items-center mb-4">
-                <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 mr-4">
-                    <i class="fas fa-box text-2xl"></i>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-gray-700">{{ $product->name }}</h4>
-                    <span class="text-sm text-gray-500">{{ ucfirst($product->type) }} Product</span>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-200 pt-4 space-y-2">
-                <div class="flex justify-between text-sm">
-                    <span>Price</span>
-                    <span class="font-medium">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                </div>
-                
-                @if($product->type === 'physical')
-                <div class="flex justify-between text-sm" id="shipping-row" style="display: none;">
-                    <span>Shipping (J&T)</span>
-                    <span class="font-medium" id="shipping-cost">Rp 0</span>
-                </div>
-                @endif
-                
-                <div class="border-t border-gray-200 pt-2 flex justify-between font-bold text-lg mt-2">
-                    <span>Total</span>
-                    <span class="text-[#8B7355]" id="total-price">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                </div>
-            </div>
+        <div class="mb-12 text-center">
+            <h1 class="text-4xl md:text-5xl font-heading font-bold text-primary mb-2">Checkout</h1>
+            <p class="text-gray-500">Selesaikan pesanan Anda untuk memulai perjalanan spiritual.</p>
         </div>
 
-        <!-- Checkout Form (Right/Bottom) -->
-        <div class="md:w-2/3 p-6">
-            <h2 class="text-2xl font-bold text-[#2C3E50] mb-6">Checkout Details</h2>
-            
-            <form action="{{ route('checkout.process', $product->product_id) }}" method="POST" id="checkout-form">
-                @csrf
-                <input type="hidden" name="ref" value="{{ request('ref') }}">
-                
-                <!-- Customer Info -->
-                <div class="mb-6">
-                    <h4 class="text-sm uppercase tracking-wide text-gray-500 font-semibold mb-3">Contact Information</h4>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Left Column: Cart & More Products -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Cart Items -->
+                <div class="bg-white rounded-3xl shadow-sm border border-pink-100 p-6 md:p-8">
+                    <h2 class="text-xl font-heading font-bold text-primary mb-6 flex items-center gap-2">
+                        <i class="fas fa-shopping-basket text-sm"></i>
+                        Pilihan Anda
+                    </h2>
+                    <div class="space-y-6">
+                        <template x-for="(item, index) in cart" :key="item.product_id">
+                            <div class="flex items-center gap-4 bg-pink-50/30 p-4 rounded-2xl relative overflow-hidden group">
+                                <div class="w-20 h-20 rounded-xl bg-white flex items-center justify-center border border-pink-100/50 shadow-sm shrink-0">
+                                    <template x-if="item.image_url">
+                                        <img :src="item.image_url" class="w-full h-full object-cover rounded-xl">
+                                    </template>
+                                    <template x-if="!item.image_url">
+                                        <iconify-icon :icon="item.icon || 'lucide:package'" class="text-3xl text-primary/40"></iconify-icon>
+                                    </template>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 x-text="item.name" class="font-bold text-gray-800 leading-tight"></h3>
+                                    <p class="text-xs text-gray-400 mt-1" x-text="item.type"></p>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-primary font-bold" x-text="formatPrice(item.price)"></span>
+                                        <div class="flex items-center gap-3">
+                                            <button @click="updateQty(index, -1)" class="w-8 h-8 rounded-full bg-white border border-pink-100 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+                                                <i class="fas fa-minus text-[10px]"></i>
+                                            </button>
+                                            <span x-text="item.qty" class="text-sm font-bold w-4 text-center"></span>
+                                            <button @click="updateQty(index, 1)" class="w-8 h-8 rounded-full bg-white border border-pink-100 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+                                                <i class="fas fa-plus text-[10px]"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button @click="removeItem(index)" class="absolute top-2 right-2 p-2 text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+                                    <i class="fas fa-times text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Add More Products -->
+                <div>
+                    <h2 class="text-xl font-heading font-bold text-primary mb-6 flex items-center gap-2">
+                        <i class="fas fa-plus-circle text-sm"></i>
+                        Tambahkan Produk Lainnya
+                    </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            <input type="text" name="name" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="Your Name">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                            <input type="email" name="email" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="you@example.com">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                            <input type="text" name="phone" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="08...">
-                        </div>
+                        <template x-for="prod in availableProducts" :key="prod.product_id">
+                            <div class="bg-white p-4 rounded-2xl border border-pink-100 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4 cursor-pointer" @click="addToCart(prod)">
+                                <div class="w-16 h-16 rounded-xl bg-pink-50 flex items-center justify-center shrink-0">
+                                    <template x-if="prod.image_url">
+                                        <img :src="prod.image_url" class="w-full h-full object-cover rounded-xl">
+                                    </template>
+                                    <template x-if="!prod.image_url">
+                                        <iconify-icon :icon="prod.icon || 'lucide:package'" class="text-2xl text-primary/40"></iconify-icon>
+                                    </template>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 x-text="prod.name" class="text-sm font-bold text-gray-800 line-clamp-1"></h4>
+                                    <p class="text-xs text-primary font-bold mt-1" x-text="formatPrice(prod.price)"></p>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                    <i class="fas fa-plus text-[10px]"></i>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
+            </div>
 
-                <!-- Shipping Address (Physical Only) -->
-                @if($product->type === 'physical')
-                <div class="mb-6">
-                    <h4 class="text-sm uppercase tracking-wide text-gray-500 font-semibold mb-3">Shipping Address</h4>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
-                            <select name="province_id" id="province" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]">
-                                <option value="">Select Province</option>
-                                @foreach($provinces as $province)
-                                    <option value="{{ $province->code }}">{{ $province->name }}</option>
-                                @endforeach
-                            </select>
+            <!-- Right Column: Buyer Info & Summary -->
+            <div class="lg:col-span-1 space-y-8">
+                <!-- Buyer Form -->
+                <div class="bg-white rounded-3xl shadow-sm border border-pink-100 p-8">
+                    <h2 class="text-xl font-heading font-bold text-primary mb-6">Informasi Pembeli</h2>
+                    <form @submit.prevent="submitOrder">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Nama Lengkap</label>
+                                <input type="text" x-model="buyer.name" required class="w-full p-3 bg-pink-50/30 border border-pink-100 rounded-xl focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Contoh: Siti Aisyah">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Email</label>
+                                <input type="email" x-model="buyer.email" required class="w-full p-3 bg-pink-50/30 border border-pink-100 rounded-xl focus:ring-primary focus:border-primary outline-none transition-all" placeholder="siti@example.com">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">WhatsApp</label>
+                                <input type="tel" x-model="buyer.phone" class="w-full p-3 bg-pink-50/30 border border-pink-100 rounded-xl focus:ring-primary focus:border-primary outline-none transition-all" placeholder="081234567890">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
-                            <select name="city_id" id="city" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" disabled>
-                                <option value="">Select City</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
-                            <select name="district_id" id="district" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" disabled>
-                                <option value="">Select District</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Village</label>
-                            <select name="village_id" id="village" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" disabled>
-                                <option value="">Select Village</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
-                            <input type="text" name="postal_code" id="postal_code" readonly class="w-full bg-gray-50 border border-gray-300 rounded p-2 text-gray-600">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Address</label>
-                        <textarea name="address_detail" required class="w-full border border-gray-300 rounded p-2 focus:ring-[#8B7355] focus:border-[#8B7355]" rows="2" placeholder="Street, Number, RT/RW"></textarea>
-                    </div>
 
-                    <!-- Hidden Fields for Shipping -->
-                    <input type="hidden" name="shipping_cost" id="input_shipping_cost" value="0">
-                    <input type="hidden" name="weight" value="{{ $product->weight }}">
-                    
-                    <div id="courier-loading" class="hidden text-sm text-gray-500 mt-2">
-                        <i class="fas fa-spinner fa-spin mr-2"></i> Calculating Shipping Cost...
-                    </div>
-                    <div id="courier-error" class="hidden text-sm text-red-500 mt-2"></div>
+                        <div class="mt-8 pt-8 border-t border-pink-50">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-400 text-sm">Subtotal</span>
+                                <span class="text-gray-800 font-bold" x-text="formatPrice(totalPrice)"></span>
+                            </div>
+                            <div class="flex justify-between items-center mb-6">
+                                <span class="text-gray-400 text-sm">Biaya Layanan</span>
+                                <span class="text-primary text-xs font-bold uppercase tracking-widest">Gratis</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-8">
+                                <span class="text-primary font-heading font-bold text-lg">Total</span>
+                                <span class="text-primary font-heading font-bold text-2xl" x-text="formatPrice(totalPrice)"></span>
+                            </div>
+
+                            <button type="submit" :disabled="loading" class="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-900/20 hover:bg-red-900 transition-all flex items-center justify-center gap-3 disabled:opacity-50">
+                                <template x-if="!loading">
+                                    <span>Lanjutkan Pembayaran</span>
+                                </template>
+                                <template x-if="loading">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                        <span>Memproses...</span>
+                                    </div>
+                                </template>
+                                <i x-show="!loading" class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                            <p class="text-[10px] text-center text-gray-400 mt-4 leading-relaxed">
+                                Dengan mengklik tombol di atas, Anda menyetujui <br>Syarat & Ketentuan yang berlaku.
+                            </p>
+                        </div>
+                    </form>
                 </div>
-                @endif
-
-                <button type="submit" id="submit-btn" class="w-full bg-[#7D2E35] text-white font-bold py-3 rounded-lg hover:bg-[#5D2228] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
-                    Complete Order
-                </button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const isPhysical = {{ $product->type === 'physical' ? 'true' : 'false' }};
-    if (!isPhysical) return;
-
-    const provinceSelect = document.getElementById('province');
-    const citySelect = document.getElementById('city');
-    const districtSelect = document.getElementById('district');
-    const villageSelect = document.getElementById('village'); 
-    const postalCodeInput = document.getElementById('postal_code');
-    
-    const shippingRow = document.getElementById('shipping-row');
-    const shippingCostSpan = document.getElementById('shipping-cost');
-    const totalPriceSpan = document.getElementById('total-price');
-    const inputShippingCost = document.getElementById('input_shipping_cost');
-    const submitBtn = document.getElementById('submit-btn');
-    const loadingDiv = document.getElementById('courier-loading');
-    
-    // Total calculation helper
-    const productPrice = {{ $product->price }};
-    const productWeight = {{ $product->weight }}; 
-    let currentShippingCost = 0;
-    
-    function updateTotalPrice() {
-         const total = productPrice + currentShippingCost;
-         totalPriceSpan.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
-         // Also verify if total text color needs update for theme
-         totalPriceSpan.style.color = '#7D2E35'; // Ensure Maroon
-    }
-
-    // Region Loaders (Reuse logic or separate file if possible)
-    async function loadData(url, targetSelect, defaultText) {
-        targetSelect.disabled = true;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            targetSelect.innerHTML = '<option value="">' + defaultText + '</option>';
-            
-             if (Array.isArray(data)) {
-                 data.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.code;
-                    option.textContent = item.name;
-                    if(item.postal_code) option.dataset.postal = item.postal_code;
-                    targetSelect.appendChild(option);
-                });
-            } else {
-                 Object.entries(data).forEach(([code, name]) => {
-                    const option = document.createElement('option');
-                    option.value = code;
-                    option.textContent = name;
-                    targetSelect.appendChild(option);
-                });
-            }
-           
-            targetSelect.disabled = false;
-        } catch (error) {
-            console.error('Error loading data:', error);
-        }
-    }
-
-    provinceSelect.addEventListener('change', function() {
-        if(this.value) loadData(`/api/regions/cities/${this.value}`, citySelect, 'Select City');
-        citySelect.innerHTML = '<option value="">Select City</option>'; 
-        districtSelect.innerHTML = '<option value="">Select District</option>';
-        districtSelect.disabled = true;
-    });
-
-    citySelect.addEventListener('change', function() {
-        if(this.value) loadData(`/api/regions/districts/${this.value}`, districtSelect, 'Select District');
-        districtSelect.innerHTML = '<option value="">Select District</option>';
-        districtSelect.disabled = true;
-    });
-    
-    // Calculate Shipping when District is Selected
-    districtSelect.addEventListener('change', function() {
-        if(this.value) {
-            loadData(`/api/regions/villages/${this.value}`, villageSelect, 'Select Village');
-            calculateShipping();
-        }
-    });
-
-    villageSelect.addEventListener('change', function() {
-         const selectedOption = this.options[this.selectedIndex];
-         if (selectedOption && selectedOption.dataset.postal) {
-             postalCodeInput.value = selectedOption.dataset.postal;
-         }
-    });
-
-    async function calculateShipping() {
-        const provinceId = provinceSelect.value;
-        const cityId = citySelect.value;
-        const districtId = districtSelect.value;
-
-        if (!provinceId || !cityId || !districtId) return;
-
-        loadingDiv.classList.remove('hidden');
-        submitBtn.disabled = true;
-        
-        try {
-            const response = await fetch('/api/shipping/calculate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('checkoutPage', (config) => ({
+                cart: [],
+                allProducts: config.allProducts,
+                settings: config.settings,
+                buyer: {
+                    name: '{{ auth()->user()->name ?? '' }}',
+                    email: '{{ auth()->user()->email ?? '' }}',
+                    phone: '{{ auth()->user()->phone ?? '' }}',
                 },
-                body: JSON.stringify({
-                    province_id: provinceId,
-                    city_id: cityId,
-                    district_id: districtId,
-                    weight: productWeight
-                })
-            });
+                loading: false,
 
-            const result = await response.json();
+                init() {
+                    const initial = config.initialProduct;
+                    this.cart.push({
+                        product_id: initial.product_id,
+                        name: initial.name,
+                        price: initial.price,
+                        type: initial.type,
+                        image_url: initial.image_url,
+                        icon: initial.icon,
+                        qty: 1
+                    });
+                },
 
-            if (result.status === 'success') {
-                currentShippingCost = result.price;
-                inputShippingCost.value = currentShippingCost;
-                
-                // Update UI
-                shippingRow.style.display = 'flex';
-                shippingCostSpan.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(currentShippingCost);
-                
-                const total = productPrice + currentShippingCost;
-                totalPriceSpan.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
-                
-                submitBtn.disabled = false;
-            } else {
-                alert('Shipping calculation failed: ' + (result.message || 'Unknown error'));
-                submitBtn.disabled = false; // Allow submit? Maybe not if shipping mandatory
-            }
-        } catch (error) {
-            console.error('Shipping Error:', error);
-            alert('Could not calculate shipping cost. Please check internet connection.');
-        } finally {
-            loadingDiv.classList.add('hidden');
-        }
-    }
-});
-</script>
-@endsection
+                get availableProducts() {
+                    return this.allProducts.filter(p => !this.cart.some(c => c.product_id === p.product_id));
+                },
+
+                get totalPrice() {
+                    return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                },
+
+                addToCart(prod) {
+                    this.cart.push({
+                        product_id: prod.product_id,
+                        name: prod.name,
+                        price: prod.price,
+                        type: prod.type,
+                        image_url: prod.image_url,
+                        icon: prod.icon,
+                        qty: 1
+                    });
+                },
+
+                updateQty(index, delta) {
+                    const newQty = this.cart[index].qty + delta;
+                    if (newQty > 0) {
+                        this.cart[index].qty = newQty;
+                    }
+                },
+
+                removeItem(index) {
+                    if (this.cart.length > 1) {
+                        this.cart.splice(index, 1);
+                    }
+                },
+
+                formatPrice(price) {
+                    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(price);
+                },
+
+                async submitOrder() {
+                    if (this.settings.require_login_checkout === '1' && !config.isLoggedIn) {
+                        window.location.href = config.loginUrl + '?redirect=' + encodeURIComponent(window.location.href);
+                        return;
+                    }
+
+                    this.loading = true;
+                    try {
+                        const response = await fetch('{{ route('checkout.process', ['productId' => $product->product_id]) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                cart: this.cart,
+                                buyer: this.buyer
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.success && result.payment_link) {
+                            window.location.href = result.payment_link;
+                        } else {
+                            alert(result.message || 'Terjadi kesalahan saat memproses pesanan.');
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert('Gagal menghubungi server.');
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }));
+        });
+    </script>
+</body>
+</html>
+捉

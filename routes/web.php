@@ -29,6 +29,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/affiliates', [AdminController::class, 'affiliates'])->name('affiliates');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     
+    // Page Management
+    Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);
+
     // Product Management
     Route::resource('products', \App\Http\Controllers\ProductController::class);
     Route::get('/commissions', [AdminController::class, 'commissions'])->name('commissions');
@@ -42,8 +45,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/fraud-logs', [AdminController::class, 'fraudLogs'])->name('fraud_logs');
     Route::post('/notifications/read', [AdminController::class, 'markNotificationsAsRead'])->name('notifications.read');
     
-    // Page Management
-    Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->only(['index', 'edit', 'update']);
+
+    // Landing Page Sections
+    Route::prefix('landing')->name('landing.')->group(function() {
+        Route::resource('sections', \App\Http\Controllers\Admin\LandingSectionController::class)->only(['index', 'edit', 'update']);
+    });
 });
 
 // Affiliate Routes

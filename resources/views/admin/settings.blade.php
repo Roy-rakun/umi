@@ -22,21 +22,64 @@
             </div>
         </div>
 
-        <!-- Social Media Settings -->
+        <!-- Checkout Settings -->
         <div class="mb-8">
-            <h4 class="text-lg font-semibold mb-4 border-b pb-2">Social Media Links</h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">TikTok URL</label>
-                    <input type="text" name="social_tiktok" value="{{ $settings['social_tiktok'] ?? '#' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="https://tiktok.com/...">
-                </div>
+            <h4 class="text-lg font-semibold mb-4 border-b pb-2">Checkout Settings</h4>
+            <div class="flex items-center">
+                <input type="hidden" name="require_login_checkout" value="0">
+                <input type="checkbox" name="require_login_checkout" value="1" id="require_login_checkout" {{ ($settings['require_login_checkout'] ?? '0') == '1' ? 'checked' : '' }} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 mr-2">
+                <label for="require_login_checkout" class="text-sm font-medium text-gray-700">Wajib Login untuk Membeli/Checkout</label>
+            </div>
+            <p class="text-xs text-gray-400 mt-1 italic pl-6">Jika diaktifkan, pengunjung harus login atau daftar akun terlebih dahulu sebelum bisa memproses pembelian.</p>
+        </div>
+
+        <!-- Navigation & Social Links -->
+        <div class="mb-8 p-6 bg-pink-50/30 rounded-2xl border border-pink-100">
+            <h4 class="text-lg font-semibold mb-6 border-b border-pink-100 pb-2 text-primary">Navigation & Social Media</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Instagram URL</label>
-                    <input type="text" name="social_instagram" value="{{ $settings['social_instagram'] ?? '#' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="https://instagram.com/...">
+                     <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Social Media (URL)</label>
+                     <div class="space-y-4">
+                        <div class="flex items-center">
+                            <span class="w-10 h-10 flex items-center justify-center bg-white rounded-l border border-r-0 border-gray-300 text-pink-600"><i class="fab fa-tiktok"></i></span>
+                            <input type="text" name="social_tiktok" value="{{ $settings['social_tiktok'] ?? '#' }}" class="flex-1 p-2 border border-gray-300 rounded-r focus:ring-primary focus:border-primary" placeholder="Tiktok URL">
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-10 h-10 flex items-center justify-center bg-white rounded-l border border-r-0 border-gray-300 text-pink-600"><i class="fab fa-instagram"></i></span>
+                            <input type="text" name="social_instagram" value="{{ $settings['social_instagram'] ?? '#' }}" class="flex-1 p-2 border border-gray-300 rounded-r focus:ring-primary focus:border-primary" placeholder="Instagram URL">
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-10 h-10 flex items-center justify-center bg-white rounded-l border border-r-0 border-gray-300 text-pink-600"><i class="fab fa-youtube"></i></span>
+                            <input type="text" name="social_youtube" value="{{ $settings['social_youtube'] ?? '#' }}" class="flex-1 p-2 border border-gray-300 rounded-r focus:ring-primary focus:border-primary" placeholder="YouTube URL">
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-10 h-10 flex items-center justify-center bg-white rounded-l border border-r-0 border-gray-300 text-green-600"><i class="fab fa-whatsapp"></i></span>
+                            <input type="text" name="social_whatsapp" value="{{ $settings['social_whatsapp'] ?? '628...' }}" class="flex-1 p-2 border border-gray-300 rounded-r focus:ring-primary focus:border-primary" placeholder="WhatsApp Number (Start with 62)">
+                        </div>
+                     </div>
                 </div>
-                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">YouTube URL</label>
-                    <input type="text" name="social_youtube" value="{{ $settings['social_youtube'] ?? '#' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="https://youtube.com/...">
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Navbar Menu Labels</label>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">Menu 1 (About)</label>
+                            <input type="text" name="nav_label_about" value="{{ $settings['nav_label_about'] ?? 'Tentang' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">Menu 2 (Products)</label>
+                            <input type="text" name="nav_label_products" value="{{ $settings['nav_label_products'] ?? 'Produk' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">Menu 3 (Affiliate)</label>
+                            <input type="text" name="nav_label_affiliate" value="{{ $settings['nav_label_affiliate'] ?? 'Affiliate' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">Menu 4 (Contact)</label>
+                            <input type="text" name="nav_label_contact" value="{{ $settings['nav_label_contact'] ?? 'Kontak' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

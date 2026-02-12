@@ -13,30 +13,73 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Alpine component for icon picker -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#7D2E35', // Maroon
-                        secondary: '#E8D5B5', // Gold/Beige
-                        bg: '#FFF9F9', // Very Pale Pink
-                        surface: '#FFFFFF',
-                        text: '#4A4A4A', // Dark Grey
-                        heading: '#2C3E50', // Dark Blueish Grey
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('iconPicker', (initialValue = '') => ({
+                open: false,
+                search: '',
+                value: initialValue,
+                icons: [],
+                filteredIcons: [],
+                loading: false,
+                error: null,
+
+                async init() {
+                    this.$watch('search', (v) => this.filterIcons(v));
+                    this.loading = true;
+                    try {
+                        const response = await fetch('https://unpkg.com/lucide-static@latest/icons.json');
+                        if (!response.ok) throw new Error('Fetch failed');
+                        const data = await response.json();
+                        this.icons = Object.keys(data).map(name => `lucide:${name}`);
+                        this.filterIcons('');
+                    } catch (e) {
+                        this.error = 'Failed to load icons';
+                        console.error(e);
+                    } finally {
+                        this.loading = false;
                     }
+                },
+
+                filterIcons(searchTerm) {
+                    if (!searchTerm) {
+                        this.filteredIcons = this.icons.slice(0, 100);
+                        return;
+                    }
+                    const lower = searchTerm.toLowerCase();
+                    this.filteredIcons = this.icons.filter(icon => icon.toLowerCase().includes(lower)).slice(0, 100);
+                },
+
+                selectIcon(icon) {
+                    this.value = icon;
+                    this.open = false;
+                },
+
+                toggle() {
+                    this.open = !this.open;
+                    if (this.open) {
+                        this.$nextTick(() => {
+                            this.$refs.searchInput?.focus();
+                        });
+                    }
+                },
+
+                close() {
+                    this.open = false;
                 }
-            }
-        }
+            }));
+        });
     </script>
+
+    <!-- Vite Assets -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>
         body {
@@ -140,6 +183,12 @@
 
             <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">System</p>
             <ul class="space-y-1">
+                <li>
+                    <a href="{{ route('admin.landing.sections.index') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.landing.sections.*') ? 'active' : 'text-gray-500' }}">
+                        <i class="fas fa-layer-group w-6 text-center mr-3 text-sm"></i>
+                        <span class="font-medium text-sm">Landing Sections</span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ route('admin.pages.index') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.pages.*') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-file-alt w-6 text-center mr-3 text-sm"></i>
@@ -269,16 +318,18 @@
         <!-- Main Content Scroll Area -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-bg p-6 lg:p-10">
             @if(session('success'))
-                <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center shadow-sm" role="alert">
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center shadow-sm" role="alert" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                     <i class="fas fa-check-circle mr-2"></i>
                     <p class="text-sm font-medium">{{ session('success') }}</p>
+                    <button @click="show = false" class="ml-auto opacity-50 hover:opacity-100">&times;</button>
                 </div>
             @endif
             
             @if(session('error'))
-                <div class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center shadow-sm" role="alert">
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 7000)" class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center shadow-sm" role="alert" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                     <i class="fas fa-exclamation-circle mr-2"></i>
                     <p class="text-sm font-medium">{{ session('error') }}</p>
+                    <button @click="show = false" class="ml-auto opacity-50 hover:opacity-100">&times;</button>
                 </div>
             @endif
 
@@ -312,7 +363,31 @@
                 toggleSidebar();
             });
         });
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('iconPicker', (initialValue = '') => ({
+                open: false,
+                value: initialValue,
+                init() {
+                    const picker = this.$refs.picker;
+                    if (picker) {
+                        picker.addEventListener('emoji-click', event => {
+                            this.value = event.detail.unicode;
+                            this.open = false;
+                        });
+                    }
+                },
+                toggle() {
+                    this.open = !this.open;
+                },
+                close() {
+                    this.open = false;
+                }
+            }));
+        });
     </script>
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+    @stack('scripts')
 </body>
-</html>
 

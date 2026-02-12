@@ -118,7 +118,7 @@ class AffiliateController extends Controller
 
     public function academy()
     {
-        $pages = \App\Models\Page::where('slug', 'like', 'academy%')->get();
+        $pages = \App\Models\Page::where('is_academy', true)->orderByDesc('updated_at')->get();
         return view('affiliate.academy', compact('pages'));
     }
 
