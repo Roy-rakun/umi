@@ -25,6 +25,11 @@
                 <input type="text" name="name" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description / Detail</label>
+                <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" rows="4"></textarea>
+            </div>
+
             <div class="grid grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
@@ -125,5 +130,14 @@
             weightInput.classList.add('hidden');
         }
     }
+
+    // Initialize CKEditor
+    ClassicEditor
+        .create(document.querySelector('#description'), {
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 @endsection

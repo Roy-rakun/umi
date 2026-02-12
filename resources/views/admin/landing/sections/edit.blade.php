@@ -133,7 +133,7 @@
                                     </button>
                                     <input type="hidden" name="{{ $cardKey }}[icon]" x-model="value">
                                     <div x-show="open" @click.away="close" class="absolute z-50 mt-1 p-4 bg-white border border-gray-200 rounded-xl shadow-xl left-0 w-64">
-                                        <input type="text" x-data="{ search: '' }" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                                        <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
                                         <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                             <template x-for="icon in filteredIcons()" :key="icon">
                                                 <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
@@ -207,7 +207,7 @@
                                     </button>
                                     <input type="hidden" name="{{ $cardKey }}[icon]" x-model="value">
                                     <div x-show="open" @click.away="close" class="absolute z-50 mt-1 p-4 bg-white border border-gray-200 rounded-xl shadow-xl left-0 w-64">
-                                        <input type="text" x-data="{ search: '' }" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                                        <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
                                         <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                             <template x-for="icon in filteredIcons()" :key="icon">
                                                 <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
@@ -283,7 +283,7 @@
                                                 </button>
                                                 <input type="hidden" :name="'items['+index+'][avatar]'" x-model="value">
                                                 <div x-show="open" @click.away="close" class="absolute z-50 mt-1 p-4 bg-white border border-gray-200 rounded-xl shadow-xl left-0 w-64">
-                                                    <input type="text" x-data="{ search: '' }" x-ref="searchInput" placeholder="Cari icon..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                                                    <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
                                                     <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                                         <template x-for="icon in filteredIcons()" :key="icon">
                                                             <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
@@ -338,7 +338,7 @@
                                         </button>
                                         <input type="hidden" :name="'channels['+index+'][icon]'" x-model="value">
                                         <div x-show="open" @click.away="close" class="absolute z-50 mt-1 p-4 bg-white border border-gray-200 rounded-xl shadow-xl left-0 w-64">
-                                            <input type="text" x-data="{ search: '' }" x-ref="searchInput" placeholder="Cari icon..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                                            <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
                                             <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                                 <template x-for="icon in filteredIcons()" :key="icon">
                                                     <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">

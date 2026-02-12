@@ -21,6 +21,11 @@
                 <input type="text" name="name" value="{{ $product->name }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description / Detail</label>
+                <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" rows="4">{{ $product->description }}</textarea>
+            </div>
+
             <div class="grid grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
@@ -45,7 +50,7 @@
                         </div>
                         
                         <div x-show="open" @click.away="close" class="absolute z-50 mt-2 p-4 bg-white border border-gray-200 rounded-xl shadow-xl w-64">
-                            <input type="text" x-data="{ search: '' }" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                            <input type="text" x-model="search" x-ref="searchInput" placeholder="Cari icon Lucide..." class="w-full p-2 mb-3 border border-gray-100 rounded-lg text-xs focus:ring-primary focus:border-primary">
                             <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                 <template x-for="icon in filteredIcons()" :key="icon">
                                     <button type="button" @click="selectIcon(icon)" class="p-2 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center border border-transparent hover:border-primary/20" :class="value === icon && 'bg-primary/5 border-primary/20'">
@@ -127,5 +132,14 @@
             weightInput.classList.add('hidden');
         }
     }
+
+    // Initialize CKEditor
+    ClassicEditor
+        .create(document.querySelector('#description'), {
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+        })
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 @endsection

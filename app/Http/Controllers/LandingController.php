@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Affiliate;
 use App\Models\AffiliateLink;
 use App\Models\Commission;

@@ -62,6 +62,10 @@
                     this.open = false;
                 },
 
+                filteredIcons() {
+                    return this.filteredIcons;
+                },
+
                 toggle() {
                     this.open = !this.open;
                     if (this.open) {
@@ -363,31 +367,8 @@
                 toggleSidebar();
             });
         });
-
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('iconPicker', (initialValue = '') => ({
-                open: false,
-                value: initialValue,
-                init() {
-                    const picker = this.$refs.picker;
-                    if (picker) {
-                        picker.addEventListener('emoji-click', event => {
-                            this.value = event.detail.unicode;
-                            this.open = false;
-                        });
-                    }
-                },
-                toggle() {
-                    this.open = !this.open;
-                },
-                close() {
-                    this.open = false;
-                }
-            }));
-        });
     </script>
     <!-- CKEditor 5 -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
     @stack('scripts')
 </body>
-

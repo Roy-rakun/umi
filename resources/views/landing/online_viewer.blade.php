@@ -360,7 +360,7 @@
          <h3 class="font-heading text-lg font-semibold mb-2 cursor-pointer hover:opacity-70 transition-opacity" 
              style="color: var(--color-primary);"
              @click="open = true; product = {{ json_encode($product) }}">{{ $product->name }}</h3>
-         <p class="text-xs opacity-70 mb-4 line-clamp-2 flex-1">{{ $product->description }}</p>
+         <p class="text-xs opacity-70 mb-4 line-clamp-2 flex-1">{!! strip_tags($product->description) !!}</p>
          <div class="flex flex-col gap-3 mt-auto">
             <span class="font-heading text-lg font-bold" style="color: var(--color-primary);">Rp {{ number_format($product->price, 0, ',', '.') }}</span> 
             <a href="{{ route('checkout', $product->product_id) }}" class="btn-primary px-5 py-2.5 rounded-xl text-sm text-center font-bold">
@@ -404,7 +404,7 @@
                 <div class="p-8 flex flex-col">
                     <span class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2" x-text="product.type == 'physical' ? 'Produk Fisik' : 'Kelas Digital'"></span>
                     <h2 class="font-heading text-2xl md:text-3xl font-bold mb-4" style="color: var(--color-primary);" x-text="product.name"></h2>
-                    <div class="flex-1 overflow-y-auto max-h-60 mb-6 text-sm leading-relaxed opacity-80" x-text="product.description"></div>
+                    <div class="flex-1 overflow-y-auto max-h-60 mb-6 text-sm leading-relaxed opacity-80 prose prose-sm max-w-none" x-html="product.description"></div>
                     
                     <div class="mt-auto border-t pt-6 flex items-center justify-between">
                         <div class="flex flex-col">
@@ -468,7 +468,7 @@
        <p class="italic opacity-80 mb-6 relative z-10">{{ $testimonial['content'] }}</p>
        <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #f8ece8 0%, #f0ddd7 100%);">
-         {{ $testimonial['avatar'] }}
+         <iconify-icon icon="{{ $testimonial['avatar'] ?? 'lucide:user' }}" class="text-primary"></iconify-icon>
         </div>
         <div>
          <div class="font-semibold" style="color: var(--color-primary);">{{ $testimonial['name'] }}</div>
