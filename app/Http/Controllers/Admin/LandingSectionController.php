@@ -22,61 +22,61 @@ class LandingSectionController extends Controller
 
     public function update(Request $request, LandingSection $section)
     {
-        $newContent = $section->content;
+        $content = $section->content;
 
-        // Handle File Uploads
+        // 1. Handle Top-Level File Uploads
         if ($request->hasFile('hero_image')) {
             $path = $request->file('hero_image')->store('landing', 'public');
-            $newContent['image_url'] = Storage::disk('public')->url($path);
+            $content['image_url'] = Storage::disk('public')->url($path);
         }
 
         if ($request->hasFile('logo_image')) {
             $path = $request->file('logo_image')->store('landing', 'public');
-            $newContent['logo_url'] = Storage::disk('public')->url($path);
+            $content['logo_url'] = Storage::disk('public')->url($path);
         }
 
-        // Handle Gallery Uploads
+        // 2. Handle Gallery (Special Array Processing)
         if ($request->has('gallery')) {
-            $galleryData = $request->input('gallery');
+            $newGallery = $request->input('gallery');
+            $existingGallery = $content['gallery'] ?? [];
             
-            // Laravel handles array file uploads specifically
-            if ($request->hasFile('gallery')) {
-                $uploadedFiles = $request->file('gallery');
-                foreach ($uploadedFiles as $index => $itemFile) {
-                    if (isset($itemFile['image']) && $itemFile['image']->isValid()) {
-                        $path = $itemFile['image']->store('landing', 'public');
-                        $galleryData[$index]['image_url'] = Storage::disk('public')->url($path);
+            $finalGallery = [];
+            for ($i = 0; $i < 9; $i++) {
+                $item = $newGallery[$i] ?? ($existingGallery[$i] ?? []);
+                
+                if ($request->hasFile("gallery.$i.image")) {
+                    $file = $request->file("gallery.$i.image");
+                    if ($file->isValid()) {
+                        $path = $file->store('landing', 'public');
+                        $item['image_url'] = Storage::disk('public')->url($path);
                     }
+                } elseif (isset($existingGallery[$i]['image_url']) && !isset($item['image_url'])) {
+                    $item['image_url'] = $existingGallery[$i]['image_url'];
                 }
+                
+                $item['is_large'] = $request->has("gallery.$i.is_large");
+                $finalGallery[$i] = $item;
             }
             
-            // Ensure only one item is marked as large
             $foundLarge = false;
-            foreach ($galleryData as $index => $item) {
-                if (isset($item['is_large']) && $item['is_large'] == 'on') {
-                    if (!$foundLarge) {
-                        $galleryData[$index]['is_large'] = true;
-                        $foundLarge = true;
-                    } else {
-                        $galleryData[$index]['is_large'] = false;
-                    }
+            foreach ($finalGallery as $idx => $item) {
+                if (($item['is_large'] ?? false) && !$foundLarge) {
+                    $foundLarge = true;
                 } else {
-                    $galleryData[$index]['is_large'] = (isset($item['is_large']) && $item['is_large'] === true);
+                    $finalGallery[$idx]['is_large'] = false;
                 }
             }
-            $newContent['gallery'] = $galleryData;
+            $content['gallery'] = $finalGallery;
         }
 
-        // Standard fields from request
-        $fields = $request->except(['_token', '_method', 'hero_image', 'logo_image', 'gallery']);
-        
-        foreach ($fields as $key => $value) {
-            $newContent[$key] = $value;
+        // 3. Handle All Other Fields (Stats, Badge, Title, etc.)
+        $nonGalleryFields = $request->except(['_token', '_method', 'hero_image', 'logo_image', 'gallery']);
+        foreach ($nonGalleryFields as $key => $value) {
+            $content[$key] = $value;
         }
 
-        $section->update([
-            'content' => $newContent
-        ]);
+        $section->content = $content;
+        $section->save();
 
         return redirect()->route('admin.landing.sections.index')->with('success', "Section {$section->name} updated successfully.");
     }

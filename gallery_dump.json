@@ -1,0 +1,57 @@
+{
+    "badge": "Tentang Mentor",
+    "stats": [
+        {
+            "label": "Alumni",
+            "value": "5000+"
+        },
+        {
+            "label": "Kelas",
+            "value": "50+"
+        },
+        {
+            "label": "Rating",
+            "value": "4.9"
+        }
+    ],
+    "title": "Umy Fadilla",
+    "gallery": [
+        {
+            "icon": "lucide:air-vent",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:alarm-clock-check",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:align-horizontal-distribute-center",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:align-horizontal-distribute-end",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:album",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:arrow-big-right-dash",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:accessibility",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:a-arrow-up",
+            "is_large": false
+        },
+        {
+            "icon": "lucide:airplay",
+            "is_large": false
+        }
+    ],
+    "description": "<p>Umy Fadilla adalah seorang praktisi spiritual dan mentor transformasi diri yang telah membantu ribuan orang menemukan keselarasan antara hati, pikiran, dan tindakan mereka.<\/p><p>Dengan pendekatan yang menggabungkan nilai-nilai Islam dan pemahaman mendalam tentang energi spiritual, Umy membimbing setiap individu untuk membuka pintu keberlimpahan yang telah Allah sediakan.<\/p><p>Melalui program \"The Secret\", Umy berbagi rahasia bagaimana menyiapkan hati dan jiwa agar doa-doa kita tidak hanya diucapkan, tetapi benar-benar terhubung dengan Sang Pencipta.<\/p>"
+}

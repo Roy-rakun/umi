@@ -72,7 +72,7 @@ class ProductController extends Controller
             }
             
             $path = $request->file('product_image')->store('products', 'public');
-            $data['image_url'] = Storage::url($path);
+            $data['image_url'] = Storage::disk('public')->url($path);
         }
 
         $product->update($data);
