@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -144,7 +144,7 @@
         
         <!-- Navigation Menu -->
         <nav class="flex-1 p-4 overflow-y-auto">
-            <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 mt-2">Main Menu</p>
+            <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 mt-2">Menu Utama</p>
             <ul class="space-y-1 mb-6">
                 <li>
                     <a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.dashboard') ? 'active' : 'text-gray-500' }}">
@@ -155,69 +155,69 @@
                 <li>
                     <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.products.*') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-box-open w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Products</span>
+                        <span class="font-medium text-sm">Produk</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.orders') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.orders') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-shopping-bag w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Orders</span>
+                        <span class="font-medium text-sm">Pesanan</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.affiliates') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.affiliates') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-users w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Affiliates</span>
+                        <span class="font-medium text-sm">Afiliasi</span>
                     </a>
                 </li>
             </ul>
 
-            <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Financial</p>
+            <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Keuangan</p>
             <ul class="space-y-1 mb-6">
                 <li>
                     <a href="{{ route('admin.commissions') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.commissions') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-coins w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Commissions</span>
+                        <span class="font-medium text-sm">Komisi</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.payouts') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.payouts') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-money-check-alt w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Payouts</span>
+                        <span class="font-medium text-sm">Pencairan</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.reports') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.reports') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-chart-pie w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Reports</span>
+                        <span class="font-medium text-sm">Laporan</span>
                     </a>
                 </li>
             </ul>
 
-            <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">System</p>
+            <p class="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Sistem</p>
             <ul class="space-y-1">
                 <li>
                     <a href="{{ route('admin.landing.sections.index') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.landing.sections.*') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-layer-group w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Landing Sections</span>
+                        <span class="font-medium text-sm">Bagian Landing</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.pages.index') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.pages.*') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-file-alt w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Pages</span>
+                        <span class="font-medium text-sm">Halaman</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.settings') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.settings') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-cog w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Settings</span>
+                        <span class="font-medium text-sm">Pengaturan</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.fraud_logs') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('admin.fraud_logs') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-shield-alt w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Fraud Logs</span>
+                        <span class="font-medium text-sm">Log Mencurigakan</span>
                     </a>
                 </li>
             </ul>
@@ -258,7 +258,7 @@
                 </button>
                 <div class="flex flex-col">
                     <h2 class="text-xl font-serif font-bold text-heading">@yield('title', 'Dashboard')</h2>
-                    <p class="text-xs text-gray-400">@yield('subtitle', 'Monitor your affiliate system performance')</p>
+                    <p class="text-xs text-gray-400">@yield('subtitle', 'Pantau performa sistem affiliate Anda')</p>
                 </div>
             </div>
             
@@ -281,10 +281,10 @@
                          x-transition:enter-start="opacity-0 scale-95"
                          x-transition:enter-end="opacity-100 scale-100">
                         <div class="p-4 border-b border-gray-50 flex justify-between items-center">
-                            <h3 class="text-sm font-bold text-heading">Notifications</h3>
+                            <h3 class="text-sm font-bold text-heading">Notifikasi</h3>
                             <form action="{{ route('admin.notifications.read') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="text-[10px] text-primary font-bold uppercase hover:underline">Mark all as read</button>
+                                <button type="submit" class="text-[10px] text-primary font-bold uppercase hover:underline">Tandai semua dibaca</button>
                             </form>
                         </div>
                         <div class="max-h-96 overflow-y-auto">
@@ -315,7 +315,7 @@
                                 </div>
                             @empty
                                 <div class="p-8 text-center text-gray-400 text-xs italic">
-                                    No new notifications.
+                                    Tidak ada notifikasi baru.
                                 </div>
                             @endforelse
                         </div>

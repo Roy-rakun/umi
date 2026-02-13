@@ -19,8 +19,33 @@ class WebhookController extends Controller
         // 1. Log incoming webhook for debugging
         Log::info('Mayar Webhook Received:', $request->all());
 
-        // 2. Validate Secret/Signature (Optional step, recommended)
-        // For simplicity, we trust the payload ID matching our records
+        // 2. Validate Secret/Signature (Recommended for security)
+        $settings = Setting::all()->pluck('value', 'key');
+        $webhookSecret = $settings['mayar_webhook_secret'] ?? null;
+        
+        if ($webhookSecret) {
+            $signature = $request->header('X-Mayar-Signature') 
+                ?? $request->header('Mayar-Signature')
+                ?? $request->header('Signature');
+            
+            if (!$signature) {
+                Log::warning('Mayar Webhook: Missing signature');
+                // For development, we allow without signature if secret is not configured
+                // In production, you should uncomment the line below:
+                // return response()->json(['message' => 'Missing signature'], 401);
+            } else {
+                $payload = $request->getContent();
+                $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+                
+                if (!hash_equals($expectedSignature, $signature)) {
+                    Log::warning('Mayar Webhook: Invalid signature', [
+                        'expected' => $expectedSignature,
+                        'received' => $signature
+                    ]);
+                    return response()->json(['message' => 'Invalid signature'], 401);
+                }
+            }
+        }
         
         $transactionStatus = $request->input('status'); // paid, failed, etc.
         $externalId = $request->input('external_id'); // Our Order ID
@@ -66,25 +91,82 @@ class WebhookController extends Controller
             return; // Already processed
         }
 
-        $product = $order->product;
-        $commissionAmount = ($affiliate->level === 'inner') 
-            ? $product->commission_inner 
-            : $product->commission_outer;
+        // Support multi-item orders - calculate commission from all order items
+        $orderItems = $order->items()->with('product')->get();
+        
+        if ($orderItems->isEmpty()) {
+            // Fallback to legacy single product order
+            $product = $order->product;
+            if (!$product) {
+                return;
+            }
+            
+            $commissionAmount = ($affiliate->level === 'inner') 
+                ? ($product->commission_inner ?? 0)
+                : ($product->commission_outer ?? 0);
 
-        $commission = Commission::create([
-            'commission_id' => 'COM-' . strtoupper(Str::random(8)),
-            'order_id' => $order->order_id,
-            'affiliate_id' => $affiliate->affiliate_id,
-            'product_id' => $product->product_id,
-            'commission_amount' => $commissionAmount,
-            'status' => 'approved', // Auto-approve if paid
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        
-        $affiliate->increment('total_commission', $commissionAmount);
-        
-        // Send notification to affiliate
-        $affiliate->user->notify(new NewCommissionNotification($commission));
+            if ($commissionAmount <= 0) {
+                return;
+            }
+
+            $commission = Commission::create([
+                'commission_id' => 'COM-' . strtoupper(Str::random(8)),
+                'order_id' => $order->order_id,
+                'affiliate_id' => $affiliate->affiliate_id,
+                'product_id' => $product->product_id,
+                'commission_amount' => $commissionAmount,
+                'status' => 'approved', // Auto-approve if paid
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            
+            $affiliate->increment('total_commission', $commissionAmount);
+            
+            // Send notification to affiliate
+            $affiliate->user->notify(new NewCommissionNotification($commission));
+        } else {
+            // Process commission for each order item
+            $totalCommission = 0;
+            $commissions = [];
+            
+            foreach ($orderItems as $item) {
+                $product = $item->product;
+                if (!$product) {
+                    continue;
+                }
+                
+                $itemCommission = ($affiliate->level === 'inner') 
+                    ? ($product->commission_inner ?? 0)
+                    : ($product->commission_outer ?? 0);
+                
+                // Multiply by quantity
+                $itemCommission = $itemCommission * $item->quantity;
+                
+                if ($itemCommission > 0) {
+                    $commission = Commission::create([
+                        'commission_id' => 'COM-' . strtoupper(Str::random(8)),
+                        'order_id' => $order->order_id,
+                        'affiliate_id' => $affiliate->affiliate_id,
+                        'product_id' => $product->product_id,
+                        'commission_amount' => $itemCommission,
+                        'status' => 'approved',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    
+                    $commissions[] = $commission;
+                    $totalCommission += $itemCommission;
+                }
+            }
+            
+            if ($totalCommission > 0) {
+                $affiliate->increment('total_commission', $totalCommission);
+                
+                // Send notification for the first commission (or you can send summary)
+                if (!empty($commissions)) {
+                    $affiliate->user->notify(new NewCommissionNotification($commissions[0]));
+                }
+            }
+        }
     }
 }

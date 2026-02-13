@@ -1,10 +1,10 @@
 @extends('layouts.admin')
-@section('title', 'Affiliates Management')
+@section('title', 'Manajemen Affiliate')
 @section('content')
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h3 class="text-xl font-serif font-bold text-heading">Affiliates List</h3>
-            <p class="text-sm text-gray-500">Manage your partner network and track their performance.</p>
+            <h3 class="text-xl font-serif font-bold text-heading">Daftar Affiliate</h3>
+            <p class="text-sm text-gray-500">Kelola jaringan mitra Anda dan pantau performa mereka.</p>
         </div>
         <div class="flex gap-2">
             <form action="{{ route('admin.affiliates.verify-all') }}" method="POST" onsubmit="return confirm('Verifikasi semua akun yang belum aktif?')">
@@ -14,12 +14,12 @@
                 </button>
             </form>
             <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-900 transition-colors shadow-sm">
-                <i class="fas fa-plus mr-2"></i> Add New Affiliate
+                <i class="fas fa-plus mr-2"></i> Tambah Affiliate
             </button>
         </div>
     </div>
 
-    <!-- Affiliates Table -->
+    <!-- Tabel Affiliate -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -27,9 +27,9 @@
                     <tr>
                         <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Affiliate</th>
                         <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Joined Date</th>
-                        <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Earnings</th>
-                        <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Action</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal Bergabung</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Penghasilan</th>
+                        <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -50,17 +50,17 @@
                             @if($affiliate->status == 'active')
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     <span class="w-1.5 h-1.5 bg-green-600 rounded-full mr-1.5"></span>
-                                    Active
+                                    Aktif
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                     <span class="w-1.5 h-1.5 bg-gray-500 rounded-full mr-1.5"></span>
-                                    {{ ucfirst($affiliate->status) }}
+                                    {{ $affiliate->status == 'inactive' ? 'Tidak Aktif' : 'Ditangguhkan' }}
                                 </span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500">
-                            {{ $affiliate->created_at->format('M d, Y') }}
+                            {{ $affiliate->created_at->format('d M Y') }}
                         </td>
                         <td class="px-6 py-4 text-right">
                             <span class="font-serif font-bold text-primary">
@@ -85,7 +85,7 @@
                     @empty
                     <tr>
                         <td colspan="5" class="px-6 py-12 text-center text-gray-400 italic">
-                            No affiliates found.
+                            Belum ada affiliate.
                         </td>
                     </tr>
                     @endforelse
@@ -93,7 +93,7 @@
             </table>
         </div>
         
-        <!-- Pagination -->
+        <!-- Paginasi -->
         <div class="px-6 py-4 border-t border-gray-50 bg-gray-50/30">
             {{ $affiliates->links() }}
         </div>

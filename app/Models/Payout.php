@@ -14,4 +14,14 @@ class Payout extends Model
     protected $keyType = 'string';
     
     protected $guarded = [];
+
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class, 'affiliate_id', 'affiliate_id');
+    }
+
+    public function commissions()
+    {
+        return $this->hasMany(Commission::class, 'payout_id', 'payout_id');
+    }
 }

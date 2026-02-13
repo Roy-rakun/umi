@@ -1,5 +1,5 @@
 @extends('layouts.affiliate')
-@section('title', 'Marketing Assets')
+@section('title', 'Aset Pemasaran')
 @section('content')
 <div class="max-w-7xl mx-auto" x-data="{ 
     selectedProduct: '', 
@@ -57,5 +57,4 @@
         </div>
     </div>
 </div>
-@endsection
 @endsection

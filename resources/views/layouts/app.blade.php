@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,7 +75,7 @@
             <div>
                 @if(!request()->routeIs('home'))
                 <a href="{{ route('home') }}" class="flex items-center text-primary hover:text-primary/80 transition-colors font-medium text-sm md:text-base">
-                    <i class="fas fa-arrow-left mr-2"></i> <span class="hidden md:inline">Back to Home</span><span class="md:hidden">Home</span>
+                    <i class="fas fa-arrow-left mr-2"></i> <span class="hidden md:inline">Kembali ke Beranda</span><span class="md:hidden">Beranda</span>
                 </a>
                 @endif
             </div>
@@ -116,13 +116,13 @@
              
              <!-- Navigation Links -->
              <div class="flex flex-wrap justify-center gap-6 md:gap-12 text-gray-500 text-sm mb-12 font-medium">
-                 <a href="{{ route('page.show', 'privacy-policy') }}" class="hover:text-primary transition-colors">Privacy Policy</a>
+                 <a href="{{ route('page.show', 'privacy-policy') }}" class="hover:text-primary transition-colors">Kebijakan Privasi</a>
                  <span class="text-gray-300">•</span>
-                 <a href="{{ route('page.show', 'terms-of-service') }}" class="hover:text-primary transition-colors">Terms of Service</a>
+                 <a href="{{ route('page.show', 'terms-of-service') }}" class="hover:text-primary transition-colors">Ketentuan Layanan</a>
                  <span class="text-gray-300">•</span>
-                 <a href="{{ route('page.show', 'affiliate-terms') }}" class="hover:text-primary transition-colors">Affiliate Terms</a>
+                 <a href="{{ route('page.show', 'affiliate-terms') }}" class="hover:text-primary transition-colors">Ketentuan Affiliate</a>
                  <span class="text-gray-300">•</span>
-                 <a href="{{ route('page.show', 'contact') }}" class="hover:text-primary transition-colors">Contact</a>
+                 <a href="{{ route('page.show', 'contact') }}" class="hover:text-primary transition-colors">Kontak</a>
              </div>
              
              <!-- Copyright -->

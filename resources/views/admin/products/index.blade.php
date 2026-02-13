@@ -1,15 +1,15 @@
 @extends('layouts.admin')
-@section('title', 'Manage Products')
+@section('title', 'Kelola Produk')
 
 @section('content')
 <div class="bg-white rounded-lg shadow-sm border border-[#E8E1D5] p-6">
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h3 class="text-xl font-bold text-[#2C3E50]">Products List</h3>
-            <p class="text-sm text-gray-500">Manage your product catalog, prices, and types.</p>
+            <h3 class="text-xl font-bold text-[#2C3E50]">Daftar Produk</h3>
+            <p class="text-sm text-gray-500">Kelola katalog produk, harga, dan tipe.</p>
         </div>
         <a href="{{ route('admin.products.create') }}" class="bg-[#2C3E50] text-white px-4 py-2 rounded hover:bg-[#1A252F] transition-colors">
-            <i class="fas fa-plus mr-2"></i> Add Product
+            <i class="fas fa-plus mr-2"></i> Tambah Produk
         </a>
     </div>
 
@@ -23,13 +23,13 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-[#F8F5F0] text-[#8B7355] text-sm uppercase tracking-wider">
-                    <th class="p-4 border-b font-semibold">Product ID</th>
+                    <th class="p-4 border-b font-semibold">ID Produk</th>
                     <th class="p-4 border-b font-semibold">Media</th>
-                    <th class="p-4 border-b font-semibold">Name</th>
-                    <th class="p-4 border-b font-semibold">Type</th>
-                    <th class="p-4 border-b font-semibold">Price</th>
-                    <th class="p-4 border-b font-semibold">Commission (O/I)</th>
-                    <th class="p-4 border-b font-semibold text-right">Actions</th>
+                    <th class="p-4 border-b font-semibold">Nama</th>
+                    <th class="p-4 border-b font-semibold">Tipe</th>
+                    <th class="p-4 border-b font-semibold">Harga</th>
+                    <th class="p-4 border-b font-semibold">Komisi (L/D)</th>
+                    <th class="p-4 border-b font-semibold text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm">
@@ -52,7 +52,7 @@
                     <td class="p-4 font-medium text-[#2C3E50]">{{ $product->name }}</td>
                     <td class="p-4">
                         <span class="px-2 py-1 rounded text-xs font-bold {{ $product->type === 'physical' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
-                            {{ ucfirst($product->type) }}
+                            {{ $product->type === 'physical' ? 'Fisik' : 'Digital' }}
                         </span>
                         @if($product->type === 'physical')
                             <div class="text-xs text-gray-400 mt-1">{{ $product->weight }}g</div>
@@ -61,17 +61,17 @@
                     <td class="p-4 font-semibold">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                     <td class="p-4">
                         <div class="text-xs">
-                            <span class="text-gray-500">Out:</span> Rp {{ number_format($product->commission_outer, 0, ',', '.') }}<br>
-                            <span class="text-gray-500">In:</span> Rp {{ number_format($product->commission_inner, 0, ',', '.') }}
+                            <span class="text-gray-500">Luar:</span> Rp {{ number_format($product->commission_outer, 0, ',', '.') }}<br>
+                            <span class="text-gray-500">Dalam:</span> Rp {{ number_format($product->commission_inner, 0, ',', '.') }}
                         </div>
                     </td>
                     <td class="p-4 text-right space-x-2">
-                        <a href="{{ route('admin.products.edit', $product->product_id) }}" class="text-[#8B7355] hover:text-[#6d5a43] font-medium transition-colors">Edit</a>
+                        <a href="{{ route('admin.products.edit', $product->product_id) }}" class="text-[#8B7355] hover:text-[#6d5a43] font-medium transition-colors">Ubah</a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="p-8 text-center text-gray-400 italic">No products found.</td>
+                    <td colspan="6" class="p-8 text-center text-gray-400 italic">Belum ada produk.</td>
                 </tr>
                 @endforelse
             </tbody>

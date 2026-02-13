@@ -10,6 +10,9 @@ use App\Http\Controllers\AuthController; // Kept AuthController as it's used lat
 use App\Http\Controllers\LandingController; // Kept LandingController as it's used later
 
 Route::get('/', [LandingController::class, 'index'])->name('home');
+
+// Affiliate Referral Link Route (short link format)
+Route::get('/ref/{code}', [LandingController::class, 'handleReferralLink'])->name('affiliate.referral');
 Route::get('/checkout/{productId}', [LandingController::class, 'checkout'])->name('checkout');
 Route::post('/checkout/{productId}', [LandingController::class, 'processCheckout'])->name('checkout.process');
 Route::get('/products', [LandingController::class, 'products'])->name('products.index');

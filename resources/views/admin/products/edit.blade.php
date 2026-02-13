@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Edit Product')
+@section('title', 'Ubah Produk')
 
 @section('content')
 <div class="bg-white rounded-lg shadow-sm border border-[#E8E1D5] p-6 max-w-2xl mx-auto">
     <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-        <h3 class="text-xl font-bold text-[#2C3E50]">Edit Product: {{ $product->name }}</h3>
+        <h3 class="text-xl font-bold text-[#2C3E50]">Ubah Produk: {{ $product->name }}</h3>
         <a href="{{ route('admin.products.index') }}" class="text-gray-500 hover:text-gray-700 text-sm">
-            <i class="fas fa-arrow-left mr-1"></i> Back to List
+            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
         </a>
     </div>
 
@@ -15,20 +15,20 @@
         @method('PUT')
 
         <div class="grid grid-cols-1 gap-6">
-            <!-- Basic Info -->
+            <!-- Info Dasar -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Produk</label>
                 <input type="text" name="name" value="{{ $product->name }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Description / Detail</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi / Detail</label>
                 <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" rows="4">{{ $product->description }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Produk</label>
                     @if($product->image_url)
                         <div class="mb-2">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-20 w-auto rounded border shadow-sm">
@@ -38,7 +38,7 @@
                     <p class="text-[10px] text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Fallback Icon</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ikon Cadangan</label>
                     <div x-data="iconPicker('{{ $product->icon }}')" class="relative">
                         <div class="flex items-center space-x-2">
                             <button type="button" @click="toggle" class="p-2 border border-gray-300 rounded bg-white hover:bg-gray-50 flex items-center justify-center min-w-[42px] h-[42px]">
@@ -68,55 +68,55 @@
 
             <div class="grid grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Price (IDR)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Harga (IDR)</label>
                     <input type="number" name="price" value="{{ $product->price }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
                 </div>
                 <div>
-                     <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                     <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
                     <input type="text" name="category" value="{{ $product->category }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
                 </div>
             </div>
 
-            <!-- Type & Weight -->
+            <!-- Tipe & Berat -->
             <div class="bg-gray-50 p-4 rounded border border-gray-200">
-                <h4 class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Shipping Configuration</h4>
+                <h4 class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Konfigurasi Pengiriman</h4>
                 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Product Type</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Produk</label>
                     <div class="flex items-center space-x-4">
                         <label class="inline-flex items-center">
                             <input type="radio" name="type" value="digital" class="text-[#8B7355] focus:ring-[#8B7355]" {{ $product->type === 'digital' ? 'checked' : '' }} onchange="toggleWeight(false)">
-                            <span class="ml-2">Digital (No Shipping)</span>
+                            <span class="ml-2">Digital (Tanpa Pengiriman)</span>
                         </label>
                         <label class="inline-flex items-center">
                             <input type="radio" name="type" value="physical" class="text-[#8B7355] focus:ring-[#8B7355]" {{ $product->type === 'physical' ? 'checked' : '' }} onchange="toggleWeight(true)">
-                            <span class="ml-2">Physical (Requires Shipping)</span>
+                            <span class="ml-2">Fisik (Perlu Pengiriman)</span>
                         </label>
                     </div>
                 </div>
 
                 <div id="weight-input" class="{{ $product->type === 'physical' ? '' : 'hidden' }}">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Weight (grams)</label>
-                    <input type="number" name="weight" value="{{ $product->weight }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="e.g. 1000">
-                    <p class="text-xs text-gray-500 mt-1">Required for J&T shipping calculation.</p>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Berat (gram)</label>
+                    <input type="number" name="weight" value="{{ $product->weight }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="contoh: 1000">
+                    <p class="text-xs text-gray-500 mt-1">Diperlukan untuk perhitungan ongkir J&T.</p>
                 </div>
             </div>
 
-            <!-- Commissions -->
+            <!-- Komisi -->
             <div class="grid grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Commission Inner (IDR)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Komisi Dalam (IDR)</label>
                     <input type="number" name="commission_inner" value="{{ $product->commission_inner }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Commission Outer (IDR)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Komisi Luar (IDR)</label>
                     <input type="number" name="commission_outer" value="{{ $product->commission_outer }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
                 </div>
             </div>
 
             <div class="flex justify-end pt-6">
                 <button type="submit" class="bg-[#8B7355] text-white px-6 py-2 rounded hover:bg-[#6d5a43] transition-colors font-bold">
-                    Update Product
+                    Simpan Perubahan
                 </button>
             </div>
         </div>

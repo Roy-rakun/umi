@@ -4,10 +4,10 @@
 <div class="container px-6 mx-auto grid">
     <div class="flex justify-between items-center my-6">
         <h2 class="text-2xl font-semibold text-gray-700">
-            Page Management
+            Manajemen Halaman
         </h2>
         <a href="{{ route('admin.pages.create') }}" class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            + Add New Page
+            + Tambah Halaman Baru
         </a>
     </div>
 
@@ -22,10 +22,10 @@
             <table class="w-full whitespace-no-wrap">
                 <thead>
                     <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                        <th class="px-4 py-3">Title</th>
+                        <th class="px-4 py-3">Judul</th>
                         <th class="px-4 py-3">Slug (URL)</th>
-                        <th class="px-4 py-3">Last Updated</th>
-                        <th class="px-4 py-3">Actions</th>
+                        <th class="px-4 py-3">Terakhir Diperbarui</th>
+                        <th class="px-4 py-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y">
@@ -46,11 +46,11 @@
                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                     </svg>
-                                    <span class="ml-2">Edit</span>
+                                    <span class="ml-2">Ubah</span>
                                 </a>
-                                <button onclick="copyToClipboard('{{ url('/' . $page->slug) }}')" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-blue-600 rounded-lg focus:outline-none focus:shadow-outline-gray" title="Copy Link">
+                                <button onclick="copyToClipboard('{{ url('/' . $page->slug) }}')" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-blue-600 rounded-lg focus:outline-none focus:shadow-outline-gray" title="Salin Link">
                                     <i class="fas fa-copy w-5 h-5 flex items-center justify-center"></i>
-                                    <span class="ml-2">Copy Link</span>
+                                    <span class="ml-2">Salin Link</span>
                                 </button>
                             </div>
                         </td>
@@ -65,22 +65,21 @@
 <script>
 function copyToClipboard(text) {
     if (!navigator.clipboard) {
-        // Fallback for older browsers
+        // Fallback untuk browser lama
         const el = document.createElement('textarea');
         el.value = text;
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-        alert('Link copied to clipboard!');
+        alert('Link berhasil disalin!');
         return;
     }
     navigator.clipboard.writeText(text).then(function() {
-        alert('Link copied to clipboard!');
+        alert('Link berhasil disalin!');
     }, function(err) {
-        console.error('Could not copy text: ', err);
+        console.error('Gagal menyalin text: ', err);
     });
 }
 </script>
 @endsection
-

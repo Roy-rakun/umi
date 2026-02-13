@@ -1,5 +1,5 @@
 @extends('layouts.affiliate')
-@section('title', 'My Profile')
+@section('title', 'Profil Saya')
 
 @section('content')
 <div class="max-w-4xl mx-auto">

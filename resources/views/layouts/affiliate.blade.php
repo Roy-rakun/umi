@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,50 +76,50 @@
         
         <!-- Navigation Menu -->
         <nav class="flex-1 px-4 overflow-y-auto">
-            <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2 mt-2">Overview</p>
+            <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2 mt-2">Ikhtisar</p>
             <ul class="space-y-1 mb-6">
                 <li>
                     <a href="{{ route('affiliate.dashboard') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.dashboard') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-th-large w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">My Dashboard</span>
+                        <span class="font-medium text-sm">Dashboard Saya</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('affiliate.my_links') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.my_links') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-link w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">My Links</span>
+                        <span class="font-medium text-sm">Link Saya</span>
                     </a>
                 </li>
             </ul>
             
-            <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Earnings</p>
+            <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Penghasilan</p>
             <ul class="space-y-1 mb-6">
                 <li>
                     <a href="{{ route('affiliate.commissions') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.commissions') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-wallet w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Commission History</span>
+                        <span class="font-medium text-sm">Riwayat Komisi</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('affiliate.payouts') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.payouts') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-university w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Withdrawals</span>
+                        <span class="font-medium text-sm">Pencairan Dana</span>
                     </a>
                 </li>
             </ul>
             
-            <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Resources</p>
+            <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Sumber Daya</p>
             <ul class="space-y-1">
                 <li>
                     <a href="{{ route('affiliate.marketing_assets') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.marketing_assets') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-shapes w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Products</span>
+                        <span class="font-medium text-sm">Produk</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('affiliate.academy') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.academy') ? 'active' : 'text-gray-500' }}">
                         <i class="fas fa-graduation-cap w-6 text-center mr-3 text-sm"></i>
-                        <span class="font-medium text-sm">Help Center</span>
+                        <span class="font-medium text-sm">Pusat Bantuan</span>
                     </a>
                 </li>
             </ul>
@@ -157,7 +157,7 @@
                 </button>
                 <div class="hidden md:block">
                     <h2 class="text-xl font-bold text-[#2C3E50]">@yield('title', 'Dashboard')</h2>
-                    <p class="text-xs text-gray-500">Manage your affiliate business</p>
+                    <p class="text-xs text-gray-500">Kelola bisnis affiliate Anda</p>
                 </div>
             </div>
             

@@ -1,16 +1,16 @@
 @extends('layouts.admin')
-@section('title', 'Analytics Reports')
+@section('title', 'Laporan Analitik')
 @section('content')
     <div class="mb-8">
-        <h3 class="text-xl font-serif font-bold text-heading">Analytics & Reports</h3>
-        <p class="text-sm text-gray-500">Overview of your business performance.</p>
+        <h3 class="text-xl font-serif font-bold text-heading">Laporan & Analitik</h3>
+        <p class="text-sm text-gray-500">Ringkasan performa bisnis Anda.</p>
     </div>
 
-    <!-- Summary Cards -->
+    <!-- Kartu Ringkasan -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <div class="flex items-center justify-between mb-4">
-                <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Revenue</h4>
+                <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Pendapatan</h4>
                 <div class="p-2 bg-green-100 rounded-lg text-green-600">
                     <i class="fas fa-wallet"></i>
                 </div>
@@ -19,13 +19,13 @@
                 Rp {{ number_format($totalRevenue, 0, ',', '.') }}
             </div>
             <p class="text-xs text-green-500 mt-2 flex items-center">
-                <i class="fas fa-arrow-up mr-1"></i> Lifetime Earnings
+                <i class="fas fa-arrow-up mr-1"></i> Penghasilan Keseluruhan
             </p>
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <div class="flex items-center justify-between mb-4">
-                <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Commissions</h4>
+                <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Komisi</h4>
                 <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
                     <i class="fas fa-hand-holding-usd"></i>
                 </div>
@@ -34,15 +34,15 @@
                 Rp {{ number_format($totalCommission, 0, ',', '.') }}
             </div>
             <p class="text-xs text-blue-500 mt-2 flex items-center">
-                <i class="fas fa-check-circle mr-1"></i> Paid & Approved
+                <i class="fas fa-check-circle mr-1"></i> Dicairkan & Disetujui
             </p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Monthly Revenue Chart (Simple CSS) -->
+        <!-- Grafik Pendapatan Bulanan -->
         <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h4 class="text-lg font-bold text-heading mb-6">Monthly Revenue (Last 6 Months)</h4>
+            <h4 class="text-lg font-bold text-heading mb-6">Pendapatan Bulanan (6 Bulan Terakhir)</h4>
             
             <div class="h-64 flex items-end justify-between space-x-2">
                 @php $maxRevenue = $monthlyRevenue->max('total') ?: 1; @endphp
@@ -60,15 +60,15 @@
                 
                 @if($monthlyRevenue->isEmpty())
                     <div class="w-full h-full flex items-center justify-center text-gray-400 italic">
-                        No revenue data available yet.
+                        Belum ada data pendapatan.
                     </div>
                 @endif
             </div>
         </div>
 
-        <!-- Top Products -->
+        <!-- Produk Terlaris -->
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h4 class="text-lg font-bold text-heading mb-6">Top Products</h4>
+            <h4 class="text-lg font-bold text-heading mb-6">Produk Terlaris</h4>
             
             <div class="space-y-4">
                 @forelse($topProducts as $item)
@@ -78,8 +78,8 @@
                                 <i class="fas fa-box"></i>
                             </div>
                             <div>
-                                <div class="text-sm font-bold text-heading">{{ $item->product->name ?? 'Unknown' }}</div>
-                                <div class="text-xs text-gray-400">{{ $item->total_sold }} Sales</div>
+                                <div class="text-sm font-bold text-heading">{{ $item->product->name ?? 'Tidak Dikenal' }}</div>
+                                <div class="text-xs text-gray-400">{{ $item->total_sold }} Terjual</div>
                             </div>
                         </div>
                         <div class="text-sm font-bold text-primary">
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-center text-gray-400 italic py-4">No sales data yet.</div>
+                    <div class="text-center text-gray-400 italic py-4">Belum ada data penjualan.</div>
                 @endforelse
             </div>
         </div>

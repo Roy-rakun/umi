@@ -2,8 +2,8 @@
 
 @section('title')
     <div class="flex flex-col">
-        <h2 class="text-xl font-serif font-bold text-[#2C3E50]">My Affiliate Links</h2>
-        <p class="text-xs text-gray-400">Manage and create your promotion links</p>
+        <h2 class="text-xl font-serif font-bold text-[#2C3E50]">Link Afiliasi Saya</h2>
+        <p class="text-xs text-gray-400">Kelola dan buat link promosi Anda</p>
     </div>
 @endsection
 
@@ -24,8 +24,8 @@
                 <i class="fas fa-magic text-xl"></i>
             </div>
             <div>
-                <h3 class="text-lg font-bold text-[#2C3E50] mb-1">Default Referral Link</h3>
-                <p class="text-xs text-gray-400 font-medium tracking-wide">Share this general link to track all activities</p>
+                <h3 class="text-lg font-bold text-[#2C3E50] mb-1">Link Referral Utama</h3>
+                <p class="text-xs text-gray-400 font-medium tracking-wide">Bagikan link utama ini untuk melacak semua aktivitas</p>
             </div>
         </div>
         
@@ -33,18 +33,18 @@
             <div class="flex-1 bg-gray-50 border border-gray-100 rounded-2xl p-4 text-gray-500 font-mono text-sm overflow-hidden whitespace-nowrap relative">
                 <span x-text="promoLink"></span>
             </div>
-            <button @click="navigator.clipboard.writeText(promoLink); alert('Link copied to clipboard!')" 
+            <button @click="navigator.clipboard.writeText(promoLink); alert('Link berhasil disalin!')" 
                     class="bg-[#7D2E35] hover:bg-[#632429] text-white px-8 py-4 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center">
-                <i class="far fa-copy mr-2"></i> Copy Link
+                <i class="far fa-copy mr-2"></i> Salin Link
             </button>
         </div>
 
-        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Generate link for specific product:</p>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Buat link untuk produk tertentu:</p>
         <div class="flex flex-wrap gap-2">
             <button @click="selectedProduct = ''" 
                     :class="selectedProduct === '' ? 'bg-[#7D2E35] text-white' : 'bg-white text-gray-500 border border-gray-100 hover:border-[#7D2E35]'"
                     class="px-5 py-2.5 rounded-xl text-xs font-bold transition-all">
-                Default Link
+                Link Utama
             </button>
             @foreach($products as $product)
             <button @click="selectedProduct = '{{ Str::slug($product->name) }}'" 
@@ -56,19 +56,19 @@
         </div>
     </div>
 
-    <!-- Active Promotion Links (Dummy for now to match consistency) -->
+    <!-- Active Promotion Links -->
     <div class="bg-surface rounded-3xl shadow-sm border border-gray-50 overflow-hidden">
         <div class="p-8 border-b border-gray-50">
-            <h3 class="text-lg font-bold text-[#2C3E50] mb-1">Active Promotion Links</h3>
-            <p class="text-xs text-gray-400 font-medium tracking-wide">Links specifically generated for campaigns</p>
+            <h3 class="text-lg font-bold text-[#2C3E50] mb-1">Link Promosi Aktif</h3>
+            <p class="text-xs text-gray-400 font-medium tracking-wide">Link yang dibuat khusus untuk kampanye</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
                     <tr class="text-left">
-                        <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Campaign Name</th>
-                        <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Clicks</th>
-                        <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Sales</th>
+                        <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Nama Kampanye</th>
+                        <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Klik</th>
+                        <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Penjualan</th>
                         <th class="px-8 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">Link</th>
                     </tr>
                 </thead>
@@ -79,8 +79,8 @@
                                 <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mb-4">
                                     <i class="fas fa-link text-3xl"></i>
                                 </div>
-                                <p class="text-xs text-gray-400 font-bold">No custom links generated yet</p>
-                                <p class="text-[10px] text-gray-400 max-w-xs mt-2">Use the generator on your dashboard to create product-specific links.</p>
+                                <p class="text-xs text-gray-400 font-bold">Belum ada link kustom yang dibuat</p>
+                                <p class="text-[10px] text-gray-400 max-w-xs mt-2">Gunakan generator di dashboard untuk membuat link spesifik produk.</p>
                             </div>
                         </td>
                     </tr>
@@ -93,7 +93,7 @@
 <script>
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Link copied to clipboard!');
+            alert('Link berhasil disalin!');
         });
     }
 </script>

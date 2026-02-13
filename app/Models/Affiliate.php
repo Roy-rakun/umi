@@ -19,4 +19,24 @@ class Affiliate extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'affiliate_id', 'affiliate_id');
+    }
+
+    public function commissions()
+    {
+        return $this->hasMany(Commission::class, 'affiliate_id', 'affiliate_id');
+    }
+
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class, 'affiliate_id', 'affiliate_id');
+    }
+
+    public function links()
+    {
+        return $this->hasMany(AffiliateLink::class, 'affiliate_id', 'affiliate_id');
+    }
 }

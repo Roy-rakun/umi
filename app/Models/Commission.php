@@ -24,4 +24,14 @@ class Commission extends Model
     {
         return $this->belongsTo(Affiliate::class, 'affiliate_id', 'affiliate_id');
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
+    }
+
+    public function payout()
+    {
+        return $this->belongsTo(Payout::class, 'payout_id', 'payout_id');
+    }
 }

@@ -1,17 +1,17 @@
 @extends('layouts.admin')
-@section('title', 'Commissions Report')
+@section('title', 'Laporan Komisi')
 @section('content')
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h3 class="text-xl font-serif font-bold text-heading">Commissions Report</h3>
-            <p class="text-sm text-gray-500">Detailed report of affiliate commissions and earnings.</p>
+            <h3 class="text-xl font-serif font-bold text-heading">Laporan Komisi</h3>
+            <p class="text-sm text-gray-500">Laporan detail komisi dan penghasilan affiliate.</p>
         </div>
         <div class="flex space-x-2">
             <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
                 <i class="fas fa-filter mr-2"></i> Filter
             </button>
             <button class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                <i class="fas fa-download mr-2"></i> Export
+                <i class="fas fa-download mr-2"></i> Ekspor
             </button>
         </div>
     </div>
@@ -21,13 +21,13 @@
             <table class="w-full">
                 <thead class="bg-gray-50/50 border-b border-gray-100">
                     <tr>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Commission ID</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">ID Komisi</th>
                         <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Affiliate</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Order Ref</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Product</th>
-                        <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">Amount</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Ref Pesanan</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Produk</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jumlah</th>
                         <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -41,7 +41,7 @@
                                 <div class="h-6 w-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold mr-2">
                                     {{ substr($commission->affiliate->user->name ?? '?', 0, 1) }}
                                 </div>
-                                <div class="text-xs font-medium text-heading">{{ $commission->affiliate->user->name ?? 'Unknown' }}</div>
+                                <div class="text-xs font-medium text-heading">{{ $commission->affiliate->user->name ?? 'Tidak Dikenal' }}</div>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-xs text-gray-500">
@@ -55,22 +55,22 @@
                         </td>
                         <td class="px-6 py-4 text-center">
                             @if($commission->status == 'paid')
-                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Paid</span>
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Dicairkan</span>
                             @elseif($commission->status == 'approved')
-                                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Approved</span>
+                                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Disetujui</span>
                             @elseif($commission->status == 'rejected')
-                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Rejected</span>
+                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Ditolak</span>
                             @else
-                                <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">{{ ucfirst($commission->status) }}</span>
+                                <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">{{ $commission->status == 'pending' ? 'Tertunda' : ucfirst($commission->status) }}</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center text-xs text-gray-500">
-                            {{ $commission->created_at->format('M d, Y') }}
+                            {{ $commission->created_at->format('d M Y') }}
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-12 text-center text-gray-400 italic">No commissions found.</td>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-400 italic">Belum ada komisi.</td>
                     </tr>
                     @endforelse
                 </tbody>

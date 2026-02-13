@@ -49,6 +49,23 @@ class LandingController extends Controller
         return view('landing.online_viewer', compact('products', 'sections', 'settings'));
     }
 
+    /**
+     * Handle short referral link format: /ref/{code}
+     */
+    public function handleReferralLink(Request $request, $code)
+    {
+        // Verify affiliate code
+        $affiliate = Affiliate::where('referral_code', $code)->first();
+        
+        if ($affiliate) {
+            // Save cookie for 30 days
+            Cookie::queue('affiliate_ref', $code, 43200);
+        }
+        
+        // Redirect to home with the ref parameter for additional tracking
+        return redirect()->route('home', ['ref' => $code]);
+    }
+
     public function products()
     {
         $products = Product::all();

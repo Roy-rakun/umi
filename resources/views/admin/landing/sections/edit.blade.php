@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Section: ' . $section->name)
-@section('subtitle', 'Update content for ' . $section->name)
+@section('title', 'Ubah Bagian: ' . $section->name)
+@section('subtitle', 'Perbarui konten untuk ' . $section->name)
 
 @section('content')
 <div class="bg-white rounded-lg shadow p-6">
@@ -742,8 +742,8 @@
         @endif
 
         <div class="mt-8 flex justify-end gap-3">
-            <a href="{{ route('admin.landing.sections.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">Cancel</a>
-            <button type="submit" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-red-900 transition-colors shadow-sm">Save Changes</button>
+            <a href="{{ route('admin.landing.sections.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">Batal</a>
+            <button type="submit" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-red-900 transition-colors shadow-sm">Simpan Perubahan</button>
         </div>
     </form>
 </div>

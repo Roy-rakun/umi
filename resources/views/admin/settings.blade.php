@@ -114,6 +114,12 @@
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Register this URL in Mayar Dashboard > Integration > Webhooks</p>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Webhook Secret (Optional)</label>
+                    <input type="password" name="mayar_webhook_secret" value="{{ $settings['mayar_webhook_secret'] ?? '' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="Secret for signature verification">
+                    <p class="text-xs text-gray-500 mt-1">Used to verify webhook signatures for security. Set this in Mayar Dashboard too.</p>
+                </div>
             </div>
         </div>
 
