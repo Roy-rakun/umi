@@ -54,6 +54,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Product Management
     Route::resource('products', \App\Http\Controllers\ProductController::class);
+    Route::post('/products/{product}/reorder/{direction}', [\App\Http\Controllers\ProductController::class, 'reorder'])->name('products.reorder');
     Route::get('/commissions', [AdminController::class, 'commissions'])->name('commissions');
     Route::get('/payouts', [AdminController::class, 'payouts'])->name('payouts');
     Route::post('/payouts/{id}/approve', [AdminController::class, 'approvePayout'])->name('payouts.approve');

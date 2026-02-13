@@ -66,12 +66,27 @@
                         </div>
                     </td>
                     <td class="p-4 text-right space-x-2">
-                        <a href="{{ route('admin.products.edit', $product->product_id) }}" class="text-[#8B7355] hover:text-[#6d5a43] font-medium transition-colors">Ubah</a>
-                        <form action="{{ route('admin.products.destroy', $product->product_id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-800 font-medium transition-colors">Hapus</button>
-                        </form>
+                        <div class="flex items-center justify-end space-x-2">
+                            <form action="{{ route('admin.products.reorder', [$product->product_id, 'up']) }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-gray-500 hover:text-gray-700 transition-colors" title="Naikkan">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                            </form>
+                            <form action="{{ route('admin.products.reorder', [$product->product_id, 'down']) }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-gray-500 hover:text-gray-700 transition-colors" title="Turunkan">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </form>
+                            <div class="w-px h-4 bg-gray-200 mx-1"></div>
+                            <a href="{{ route('admin.products.edit', $product->product_id) }}" class="text-[#8B7355] hover:text-[#6d5a43] font-medium transition-colors">Ubah</a>
+                            <form action="{{ route('admin.products.destroy', $product->product_id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-800 font-medium transition-colors">Hapus</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty

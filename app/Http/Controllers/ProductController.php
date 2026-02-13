@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::orderBy('sort_order', 'asc')->get();
         return view('admin.products.index', compact('products'));
     }
 
@@ -37,6 +37,9 @@ class ProductController extends Controller
             $path = $request->file('product_image')->store('products', 'public');
             $data['image_url'] = '/storage/' . $path;
         }
+
+        // Set default sort_order
+        $data['sort_order'] = Product::max('sort_order') + 1;
 
         Product::create($data);
 
@@ -106,5 +109,31 @@ class ProductController extends Controller
         
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', "Produk '{$product->name}' berhasil dihapus.");
+    }
+    public function reorder(Request $request, Product $product, $direction)
+    {
+        $currentOrder = $product->sort_order;
+        
+        if ($direction === 'up') {
+            $swapProduct = Product::where('sort_order', '<', $currentOrder)
+                ->orderBy('sort_order', 'desc')
+                ->first();
+        } else {
+            $swapProduct = Product::where('sort_order', '>', $currentOrder)
+                ->orderBy('sort_order', 'asc')
+                ->first();
+        }
+
+        if ($swapProduct) {
+            $product->sort_order = $swapProduct->sort_order;
+            $swapProduct->sort_order = $currentOrder;
+            
+            $product->save();
+            $swapProduct->save();
+            
+            return back()->with('success', 'Urutan produk berhasil diperbarui.');
+        }
+
+        return back()->with('error', 'Sudah berada di batas urutan.');
     }
 }

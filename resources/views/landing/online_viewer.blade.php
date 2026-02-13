@@ -424,9 +424,15 @@
               <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                @foreach($products as $product)
                <div class="card-soft rounded-3xl overflow-hidden flex flex-col">
-                <div class="product-image aspect-square text-4xl cursor-pointer hover:opacity-90 transition-opacity" 
+                <div class="product-image aspect-square text-4xl cursor-pointer hover:opacity-90 transition-opacity overflow-hidden" 
                      @click="open = true; product = {{ json_encode($product) }}">
-                  @if($product->type == 'physical') 📿 @else 🎓 @endif
+                  @if($product->image_url)
+                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                  @elseif($product->icon)
+                    <iconify-icon icon="{{ $product->icon }}" class="text-5xl text-primary/60"></iconify-icon>
+                  @else
+                    <span>@if($product->type == 'physical') 📿 @else 🎓 @endif</span>
+                  @endif
                 </div>
                 <div class="p-6 flex-1 flex flex-col">
                  <h3 class="font-heading text-lg font-semibold mb-2 cursor-pointer hover:opacity-70 transition-opacity" 
@@ -477,8 +483,13 @@
                     </button>
 
                     <div class="grid md:grid-cols-2">
-                        <div class="aspect-square bg-gradient-to-br from-rose-50 to-amber-50 flex items-center justify-center text-7xl">
-                            <span x-text="product.type == 'physical' ? '📿' : '🎓'"></span>
+                        <div class="aspect-square bg-gradient-to-br from-rose-50 to-amber-50 flex items-center justify-center text-7xl overflow-hidden">
+                            <template x-if="product.image_url">
+                                <img :src="product.image_url" :alt="product.name" class="w-full h-full object-cover">
+                            </template>
+                            <template x-if="!product.image_url">
+                                <span x-text="product.type == 'physical' ? '📿' : '🎓'"></span>
+                            </template>
                         </div>
                         <div class="p-8 flex flex-col">
                             <span class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2" x-text="product.type == 'physical' ? 'Produk Fisik' : 'Kelas Digital'"></span>
@@ -509,7 +520,7 @@
             <div class="max-w-5xl mx-auto">
              <div class="text-center mb-12"><span class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background-color: #fff7f6; color: var(--color-primary);">{{ $section->content['badge'] }}</span>
               <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--color-primary);">{{ $section->content['title'] }}</h2>
-              <p class="max-w-2xl mx-auto opacity-80">{{ $section->content['description'] }}</p>
+              <p class="max-w-2xl mx-auto opacity-80">{!! $section->content['description'] !!}</p>
              </div>
              <div class="grid md:grid-cols-3 gap-6 mb-10">
               @foreach(['card_1', 'card_2', 'card_3'] as $idx => $cardKey)
