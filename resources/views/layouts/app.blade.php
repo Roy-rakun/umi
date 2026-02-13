@@ -135,5 +135,35 @@
         </div>
     </footer>
 
+    <script>
+        // Global Smooth Scroll with Event Delegation
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (anchor) {
+                const href = anchor.getAttribute('href');
+                if (href.startsWith('#') && href.length > 1) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        
+                        // Prevent new tab on internal anchors
+                        if (anchor.getAttribute('target') === '_blank') {
+                            anchor.removeAttribute('target');
+                        }
+
+                        const navHeight = document.querySelector('nav')?.offsetHeight || 0;
+                        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        history.pushState(null, null, href);
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

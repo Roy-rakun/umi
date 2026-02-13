@@ -674,18 +674,34 @@
       firstSection.style.transform = 'translateY(0)';
     }
 
-    // Smooth scroll for navigation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href.startsWith('#')) {
+    // Unified Smooth Scroll with Event Delegation
+    document.addEventListener('click', function(e) {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        if (href.startsWith('#') && href.length > 1) {
+          const target = document.querySelector(href);
+          if (target) {
             e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Remove target="_blank" if it exists on internal anchors to prevent new tabs
+            if (anchor.getAttribute('target') === '_blank') {
+              anchor.removeAttribute('target');
             }
+
+            const navHeight = document.querySelector('nav')?.offsetHeight || 80;
+            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Update URL hash without jumping
+            history.pushState(null, null, href);
+          }
         }
-      });
+      }
     });
   </script>
 </body>
