@@ -47,12 +47,13 @@
                     <input type="hidden" name="ids[]" :value="id">
                 </template>
                 <div class="flex gap-2">
-                    <select name="action" class="text-xs border-gray-200 rounded-lg focus:ring-primary focus:border-primary py-2 px-3 bg-gray-50 font-medium outline-none">
-                        <option value="">-- Pilih Aksi --</option>
-                        <option value="verify">Verifikasi Akun</option>
-                        <option value="set_inner">Pindahkan ke Grup Inner</option>
-                        <option value="set_outer">Pindahkan ke Grup Outer</option>
-                        <option value="delete">Hapus Permanen</option>
+                    <select name="action" class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm font-bold outline-none focus:ring-2 focus:ring-white/30 transition-all cursor-pointer">
+                        <option value="verify" class="text-gray-900">Verifikasi Akun</option>
+                        <option value="suspend" class="text-gray-900">Tangguhkan Akun</option>
+                        <option value="unsuspend" class="text-gray-900">Aktifkan Kembali</option>
+                        <option value="set_inner" class="text-gray-900">Pindahkan ke Grup Inner</option>
+                        <option value="set_outer" class="text-gray-900">Pindahkan ke Grup Outer</option>
+                        <option value="delete" class="text-gray-900">Hapus Permanen</option>
                     </select>
                     <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-900 transition-colors shadow-sm">
                         Terapkan

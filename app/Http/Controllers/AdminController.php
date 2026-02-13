@@ -417,6 +417,30 @@ class AdminController extends Controller
                 $message = "$count affiliate berhasil diverifikasi.";
                 break;
 
+            case 'suspend':
+                $count = 0;
+                foreach ($ids as $id) {
+                    $affiliate = Affiliate::find($id);
+                    if ($affiliate) {
+                        $affiliate->update(['status' => 'suspended']);
+                        $count++;
+                    }
+                }
+                $message = "$count affiliate berhasil ditangguhkan.";
+                break;
+
+            case 'unsuspend':
+                $count = 0;
+                foreach ($ids as $id) {
+                    $affiliate = Affiliate::find($id);
+                    if ($affiliate) {
+                        $affiliate->update(['status' => 'active']);
+                        $count++;
+                    }
+                }
+                $message = "$count affiliate berhasil diaktifkan kembali.";
+                break;
+
             case 'set_inner':
                 Affiliate::whereIn('affiliate_id', $ids)->update(['level' => 'inner']);
                 $message = count($ids) . " affiliate berhasil diubah ke grup Inner.";

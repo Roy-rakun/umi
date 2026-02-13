@@ -297,7 +297,7 @@
                 @endif
                </div>
                <h3 class="font-heading text-xl font-semibold mb-4" style="color: var(--color-primary);">{{ $item['title'] ?? '' }}</h3>
-               <p class="opacity-70 leading-relaxed">{{ $item['description'] ?? '' }}</p>
+               <p class="opacity-70 leading-relaxed">{!! $item['description'] ?? '' !!}</p>
               </div>
               @endif
               @endforeach
@@ -577,7 +577,7 @@
               @foreach($section->content['items'] as $testimonial)
               <div class="card-soft rounded-3xl p-8 relative">
                <div class="absolute -top-4 left-8 text-6xl font-heading text-primary/20">"</div>
-               <p class="italic opacity-80 mb-6 relative z-10">{{ $testimonial['content'] }}</p>
+               <p class="italic opacity-80 mb-6 relative z-10">{!! $testimonial['content'] !!}</p>
                <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #f8ece8 0%, #f0ddd7 100%);">
                  <iconify-icon icon="{{ $testimonial['avatar'] ?? 'lucide:user' }}" class="text-primary"></iconify-icon>
@@ -598,7 +598,7 @@
            <section id="contact" class="section-padding" style="background: linear-gradient(180deg, #fef5f3 0%, #fff7f6 100%);">
             <div class="max-w-4xl mx-auto text-center">
              <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4" style="color: var(--color-primary);">{{ $section->content['title'] }}</h2>
-             <p class="opacity-80 mb-10">{{ $section->content['description'] }}</p>
+             <p class="opacity-80 mb-10">{!! $section->content['description'] !!}</p>
              <div class="flex flex-wrap justify-center gap-4 mb-8">
                 @foreach($section->content['channels'] ?? [] as $channel)
                 <a href="{{ $channel['url'] }}" target="_blank" rel="noopener noreferrer" class="card-soft rounded-2xl px-6 py-4 flex items-center gap-3 hover:scale-105 transition-transform">
@@ -609,7 +609,7 @@
                 </a>
                 @endforeach
              </div>
-             <p class="text-sm opacity-60 card-soft inline-block px-4 py-2 rounded-xl">⚠️ {{ $section->content['warning_text'] }}</p>
+             <p class="text-sm opacity-60 card-soft inline-block px-4 py-2 rounded-xl">⚠️ {!! $section->content['warning_text'] !!}</p>
               @if(!empty($section->content['buttons']))
               <div class="flex flex-wrap justify-center gap-4 mt-10">
                 @foreach($section->content['buttons'] as $btn)
@@ -647,7 +647,7 @@
                        @endforeach
                    </div>
                    @endif
-                   <p class="text-sm opacity-60">{{ $section->content['copyright'] }}</p>
+                   <p class="text-sm opacity-60">{!! $section->content['copyright'] !!}</p>
                </div>
              </div>
             </div>
