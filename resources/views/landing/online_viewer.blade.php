@@ -674,14 +674,13 @@
       firstSection.style.transform = 'translateY(0)';
     }
 
-    // Unified Smooth Scroll with Event Delegation
+    // Unified Smooth Scroll with Event Delegation (Robust Version)
     document.addEventListener('click', function(e) {
-      const anchor = e.target.closest('a[href^="#"]');
-      if (anchor) {
-        const href = anchor.getAttribute('href');
-        if (href.startsWith('#') && href.length > 1) {
-          const target = document.querySelector(href);
+      const anchor = e.target.closest('a');
+      if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+          const target = document.querySelector(anchor.hash);
           if (target) {
+            const href = anchor.getAttribute('href');
             e.preventDefault();
             
             // Remove target="_blank" if it exists on internal anchors to prevent new tabs
@@ -690,12 +689,26 @@
             }
 
             const navHeight = document.querySelector('nav')?.offsetHeight || 80;
-            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-
-            window.scrollTo({
-              top: targetPosition,
-              behavior: 'smooth'
-            });
+            const scrollWrapper = document.getElementById('app-wrapper');
+            
+            if (scrollWrapper && scrollWrapper.scrollHeight > scrollWrapper.clientHeight) {
+                // Posisi target relatif terhadap scrollWrapper
+                const wrapperRect = scrollWrapper.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                const targetPosition = targetRect.top - wrapperRect.top + scrollWrapper.scrollTop - navHeight;
+                
+                scrollWrapper.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                // Scroll in window
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
             
             // Update URL hash without jumping
             history.pushState(null, null, href);

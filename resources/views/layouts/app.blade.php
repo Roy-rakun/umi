@@ -136,31 +136,40 @@
     </footer>
 
     <script>
-        // Global Smooth Scroll with Event Delegation
+        // Global Smooth Scroll with Event Delegation (Robust Version)
         document.addEventListener('click', function(e) {
-            const anchor = e.target.closest('a[href^="#"]');
-            if (anchor) {
-                const href = anchor.getAttribute('href');
-                if (href.startsWith('#') && href.length > 1) {
-                    const target = document.querySelector(href);
-                    if (target) {
-                        e.preventDefault();
+            const anchor = e.target.closest('a');
+            if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+                const target = document.querySelector(anchor.hash);
+                if (target) {
+                    e.preventDefault();
+                    
+                    // Prevent new tab on internal anchors
+                    if (anchor.getAttribute('target') === '_blank') {
+                        anchor.removeAttribute('target');
+                    }
+
+                    const navHeight = document.querySelector('nav')?.offsetHeight || 0;
+                    const scrollWrapper = document.getElementById('app-wrapper');
+                    
+                    if (scrollWrapper && scrollWrapper.scrollHeight > scrollWrapper.clientHeight) {
+                        const wrapperRect = scrollWrapper.getBoundingClientRect();
+                        const targetRect = target.getBoundingClientRect();
+                        const targetPosition = targetRect.top - wrapperRect.top + scrollWrapper.scrollTop - navHeight;
                         
-                        // Prevent new tab on internal anchors
-                        if (anchor.getAttribute('target') === '_blank') {
-                            anchor.removeAttribute('target');
-                        }
-
-                        const navHeight = document.querySelector('nav')?.offsetHeight || 0;
+                        scrollWrapper.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    } else {
                         const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-
                         window.scrollTo({
                             top: targetPosition,
                             behavior: 'smooth'
                         });
-                        
-                        history.pushState(null, null, href);
                     }
+                    
+                    history.pushState(null, null, anchor.hash);
                 }
             }
         });
