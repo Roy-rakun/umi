@@ -136,43 +136,56 @@
     </footer>
 
     <script>
-        // Global Smooth Scroll with Event Delegation (Robust Version)
-        document.addEventListener('click', function(e) {
+        // Global Smooth Scroll (Ultra Robust Version)
+        const handleGlobalSmoothScroll = (e) => {
             const anchor = e.target.closest('a');
-            if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+            if (anchor && anchor.hash && (anchor.pathname === window.location.pathname || anchor.host === window.location.host)) {
                 const target = document.querySelector(anchor.hash);
                 if (target) {
-                    e.preventDefault();
-                    
-                    // Prevent new tab on internal anchors
+                    // Forcefully prevent new tab
                     if (anchor.getAttribute('target') === '_blank') {
-                        anchor.removeAttribute('target');
+                        anchor.setAttribute('target', '_self');
                     }
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     const navHeight = document.querySelector('nav')?.offsetHeight || 0;
                     const scrollWrapper = document.getElementById('app-wrapper');
                     
+                    const doScroll = (container, pos) => {
+                        container.scrollTo({ top: pos, behavior: 'smooth' });
+                    };
+
                     if (scrollWrapper && scrollWrapper.scrollHeight > scrollWrapper.clientHeight) {
                         const wrapperRect = scrollWrapper.getBoundingClientRect();
                         const targetRect = target.getBoundingClientRect();
-                        const targetPosition = targetRect.top - wrapperRect.top + scrollWrapper.scrollTop - navHeight;
-                        
-                        scrollWrapper.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
+                        doScroll(scrollWrapper, targetRect.top - wrapperRect.top + scrollWrapper.scrollTop - navHeight);
                     } else {
                         const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
+                        doScroll(window, targetPosition);
                     }
                     
                     history.pushState(null, null, anchor.hash);
                 }
             }
-        });
+        };
+
+        // Use capture phase to intercept before other listeners
+        document.addEventListener('click', handleGlobalSmoothScroll, true);
+
+        // Proactively clean internal links to avoid browser race conditions
+        const cleanGlobalLinks = () => {
+            document.querySelectorAll('a[href*="#"]').forEach(a => {
+                const href = a.getAttribute('href');
+                if (href && (href.startsWith('#') || href.includes(window.location.host + '/#'))) {
+                    if (a.getAttribute('target') === '_blank') a.setAttribute('target', '_self');
+                }
+            });
+        };
+        
+        cleanGlobalLinks();
+        new MutationObserver(cleanGlobalLinks).observe(document.body, { childList: true, subtree: true });
     </script>
 </body>
 </html>

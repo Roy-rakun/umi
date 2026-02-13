@@ -674,48 +674,56 @@
       firstSection.style.transform = 'translateY(0)';
     }
 
-    // Unified Smooth Scroll with Event Delegation (Robust Version)
-    document.addEventListener('click', function(e) {
+    // Unified Smooth Scroll (Ultra Robust Version)
+    const handleSmoothScroll = (e) => {
       const anchor = e.target.closest('a');
-      if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+      if (anchor && anchor.hash && (anchor.pathname === window.location.pathname || anchor.host === window.location.host)) {
           const target = document.querySelector(anchor.hash);
           if (target) {
-            const href = anchor.getAttribute('href');
-            e.preventDefault();
-            
-            // Remove target="_blank" if it exists on internal anchors to prevent new tabs
+            // Forcefully prevent new tab
             if (anchor.getAttribute('target') === '_blank') {
-              anchor.removeAttribute('target');
+                anchor.setAttribute('target', '_self');
             }
+            
+            e.preventDefault();
+            e.stopPropagation();
 
             const navHeight = document.querySelector('nav')?.offsetHeight || 80;
             const scrollWrapper = document.getElementById('app-wrapper');
             
+            const doScroll = (container, pos) => {
+                container.scrollTo({ top: pos, behavior: 'smooth' });
+            };
+
             if (scrollWrapper && scrollWrapper.scrollHeight > scrollWrapper.clientHeight) {
-                // Posisi target relatif terhadap scrollWrapper
                 const wrapperRect = scrollWrapper.getBoundingClientRect();
                 const targetRect = target.getBoundingClientRect();
-                const targetPosition = targetRect.top - wrapperRect.top + scrollWrapper.scrollTop - navHeight;
-                
-                scrollWrapper.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                doScroll(scrollWrapper, targetRect.top - wrapperRect.top + scrollWrapper.scrollTop - navHeight);
             } else {
-                // Scroll in window
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                doScroll(window, targetPosition);
             }
             
-            // Update URL hash without jumping
-            history.pushState(null, null, href);
+            history.pushState(null, null, anchor.hash);
           }
-        }
       }
-    });
+    };
+
+    // Use capture phase to intercept before other listeners
+    document.addEventListener('click', handleSmoothScroll, true);
+
+    // Proactively clean internal links to avoid browser race conditions
+    const cleanLinks = () => {
+        document.querySelectorAll('a[href*="#"]').forEach(a => {
+            const href = a.getAttribute('href');
+            if (href.startsWith('#') || href.includes(window.location.host + '/#')) {
+                if (a.getAttribute('target') === '_blank') a.setAttribute('target', '_self');
+            }
+        });
+    };
+    
+    cleanLinks();
+    new MutationObserver(cleanLinks).observe(document.body, { childList: true, subtree: true });
   </script>
 </body>
 </html>
