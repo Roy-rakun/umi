@@ -90,6 +90,8 @@
             font-family: 'Inter', sans-serif;
             background-color: #FFF9F9;
         }
+
+        [x-cloak] { display: none !important; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -226,15 +228,15 @@
         <!-- User Profile Minimal -->
         <div class="p-4 border-t border-gray-50">
             <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-serif font-bold text-xs mr-3">
-                        A
+                <a href="{{ route('admin.profile') }}" class="flex items-center group">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-serif font-bold text-xs mr-3 group-hover:bg-[#632429] transition-colors">
+                        {{ substr(auth()->user()->name, 0, 1) }}
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-heading">Admin User</p>
+                        <p class="text-sm font-bold text-heading group-hover:text-primary transition-colors">{{ auth()->user()->name }}</p>
                         <p class="text-[10px] text-gray-400">Administrator</p>
                     </div>
-                </div>
+                </a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Logout">

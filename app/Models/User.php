@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'affiliate_id',
         'phone',
         'status',
+        'email_verified_at',
         'province_id',
         'city_id',
         'district_id',

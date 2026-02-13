@@ -630,7 +630,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Description</label>
-                    <input type="text" name="description" value="{{ $section->content['description'] ?? '' }}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary">
+                    <textarea name="description" class="wysiwyg">{{ $section->content['description'] ?? '' }}</textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Warning Text</label>

@@ -23,7 +23,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
             'phone' => 'nullable|string',
             'province_id' => 'nullable|string',
             'city_id' => 'nullable|string',
@@ -32,10 +32,11 @@ class ProfileController extends Controller
             'postal_code' => 'nullable|string',
             'address_detail' => 'nullable|string',
             'bank_account' => 'nullable|string',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $user = Auth::user();
-        $user->update($request->only([
+        $data = $request->only([
             'name',
             'phone', 
             'province_id', 
@@ -45,7 +46,13 @@ class ProfileController extends Controller
             'postal_code', 
             'address_detail',
             'bank_account'
-        ]));
+        ]);
+
+        if ($request->filled('password')) {
+            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $user->update($data);
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     }

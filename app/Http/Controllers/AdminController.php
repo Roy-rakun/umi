@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 
 use App\Models\User;
@@ -290,6 +292,44 @@ class AdminController extends Controller
         return back()->with('success', "Affiliate $name berhasil dihapus secara permanen.");
     }
 
+    public function storeAffiliate(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'affiliate',
+                'phone' => $request->phone,
+                'email_verified_at' => now(), // Auto verify
+                'status' => 'active',
+            ]);
+
+            $affiliate = Affiliate::create([
+                'user_id' => $user->id,
+                'affiliate_id' => 'AFF-' . strtoupper(Str::random(8)),
+                'status' => 'active',
+                'level' => $request->level ?? 'outer',
+            ]);
+
+            $user->update(['affiliate_id' => $affiliate->affiliate_id]);
+
+            DB::commit();
+            return back()->with('success', "Affiliate {$user->name} berhasil didaftarkan.");
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Gagal mendaftarkan affiliate: ' . $e->getMessage());
+        }
+    }
+
     public function cancelOrder($id)
     {
         $order = Order::findOrFail($id);
@@ -325,5 +365,77 @@ class AdminController extends Controller
         $order->delete();
         
         return back()->with('success', "Pesanan #{$orderId} berhasil dihapus secara permanen.");
+    }
+
+    public function updateAffiliateGroup(Request $request, $id)
+    {
+        $request->validate([
+            'level' => 'required|in:inner,outer',
+        ]);
+
+        $affiliate = Affiliate::findOrFail($id);
+        $affiliate->update(['level' => $request->level]);
+
+        return back()->with('success', "Grup affiliate {$affiliate->user->name} berhasil diperbarui ke " . ucfirst($request->level) . ".");
+    }
+
+    public function bulkActionAffiliates(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $action = $request->input('action');
+
+        if (empty($ids)) {
+            return back()->with('error', 'Tidak ada affiliate yang dipilih.');
+        }
+
+        switch ($action) {
+            case 'delete':
+                foreach ($ids as $id) {
+                    $affiliate = Affiliate::find($id);
+                    if ($affiliate) {
+                        $user = $affiliate->user;
+                        $affiliate->commissions()->delete();
+                        $affiliate->payouts()->delete();
+                        $affiliate->links()->delete();
+                        $affiliate->delete();
+                        if ($user) $user->delete();
+                    }
+                }
+                $message = count($ids) . " affiliate berhasil dihapus secara permanen.";
+                break;
+            
+            case 'verify':
+                $count = 0;
+                foreach ($ids as $id) {
+                    $affiliate = Affiliate::find($id);
+                    if ($affiliate && $affiliate->user && !$affiliate->user->hasVerifiedEmail()) {
+                        $affiliate->user->markEmailAsVerified();
+                        $affiliate->update(['status' => 'active']);
+                        $count++;
+                    }
+                }
+                $message = "$count affiliate berhasil diverifikasi.";
+                break;
+
+            case 'set_inner':
+                Affiliate::whereIn('affiliate_id', $ids)->update(['level' => 'inner']);
+                $message = count($ids) . " affiliate berhasil diubah ke grup Inner.";
+                break;
+
+            case 'set_outer':
+                Affiliate::whereIn('affiliate_id', $ids)->update(['level' => 'outer']);
+                $message = count($ids) . " affiliate berhasil diubah ke grup Outer.";
+                break;
+
+            default:
+                return back()->with('error', 'Aksi massal tidak valid.');
+        }
+
+        return back()->with('success', $message);
+    }
+    public function profile()
+    {
+        $user = auth()->user();
+        return view('admin.profile', compact('user'));
     }
 }

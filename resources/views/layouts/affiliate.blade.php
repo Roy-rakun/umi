@@ -128,15 +128,15 @@
         <!-- Sidebar Footer -->
         <div class="p-6 border-t border-gray-50">
             <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full bg-[#7D2E35] text-white flex items-center justify-center font-serif font-bold text-xs mr-3">
+                <a href="{{ route('affiliate.profile') }}" class="flex items-center group">
+                    <div class="w-8 h-8 rounded-full bg-[#7D2E35] text-white flex items-center justify-center font-serif font-bold text-xs mr-3 group-hover:bg-[#632429] transition-colors">
                         {{ substr(auth()->user()->name, 0, 1) }}
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-[#2C3E50]">{{ auth()->user()->name }}</p>
+                        <p class="text-sm font-bold text-[#2C3E50] group-hover:text-[#7D2E35] transition-colors">{{ auth()->user()->name }}</p>
                         <p class="text-[10px] text-gray-400 capitalize">{{ auth()->user()->affiliate?->level ?? 'Free' }} Affiliate</p>
                     </div>
-                </div>
+                </a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="text-gray-400 hover:text-[#7D2E35] transition-colors">

@@ -25,6 +25,16 @@
             </div>
             @endif
 
+            @if($errors->any())
+            <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                <ul class="list-disc list-inside font-medium">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <!-- Basic Info -->
             <div class="mb-6">
                 <h4 class="text-sm font-bold text-[#2C3E50] mb-4 pb-2 border-b border-gray-100">Informasi Dasar</h4>
@@ -110,6 +120,32 @@
                 <label class="block text-sm font-bold text-[#2C3E50] mb-2">Detail Alamat Lengkap</label>
                 <textarea name="address_detail" rows="3" placeholder="Nama jalan, nomor rumah, RT/RW, dll."
                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7D2E35] focus:border-transparent transition-all">{{ $user->address_detail }}</textarea>
+            </div>
+
+            <!-- Password Change Section -->
+            <div class="mb-6">
+                <h4 class="text-sm font-bold text-[#2C3E50] mb-4 pb-2 border-b border-gray-100 flex items-center">
+                    <i class="fas fa-lock mr-2 text-[#7D2E35]/50"></i> Keamanan Akun
+                </h4>
+                <div class="bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
+                    <p class="text-xs text-gray-500 mb-6 italic flex items-center">
+                        <i class="fas fa-info-circle mr-2 text-[#7D2E35]"></i> Kosongkan jika tidak ingin mengubah password
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-[#2C3E50] mb-2">Password Baru</label>
+                            <input type="password" name="password" 
+                                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7D2E35] focus:border-transparent transition-all"
+                                   placeholder="Min. 8 karakter">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-[#2C3E50] mb-2">Konfirmasi Password</label>
+                            <input type="password" name="password_confirmation" 
+                                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7D2E35] focus:border-transparent transition-all"
+                                   placeholder="Ulangi password baru">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="flex justify-end pt-6 border-t border-gray-50">

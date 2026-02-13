@@ -44,6 +44,8 @@ Route::post('/email/verification-notification', function (Illuminate\Http\Reques
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/affiliates', [AdminController::class, 'affiliates'])->name('affiliates');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::post('/orders/{id}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
@@ -80,6 +82,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Affiliate Management Actions
     Route::post('/affiliates/{id}/suspend', [AdminController::class, 'suspendAffiliate'])->name('affiliates.suspend');
     Route::post('/affiliates/{id}/unsuspend', [AdminController::class, 'unsuspendAffiliate'])->name('affiliates.unsuspend');
+    Route::post('/affiliates', [AdminController::class, 'storeAffiliate'])->name('affiliates.store');
+    Route::post('/affiliates/{id}/update-group', [AdminController::class, 'updateAffiliateGroup'])->name('affiliates.update-group');
+    Route::post('/affiliates/bulk-action', [AdminController::class, 'bulkActionAffiliates'])->name('affiliates.bulk-action');
     Route::delete('/affiliates/{id}', [AdminController::class, 'deleteAffiliate'])->name('affiliates.destroy');
 });
 

@@ -196,6 +196,17 @@
         <a href="#products" class="hover:opacity-70 transition-opacity">{{ $settings['nav_label_products'] ?? 'Produk' }}</a> 
         <a href="#affiliate" class="hover:opacity-70 transition-opacity">{{ $settings['nav_label_affiliate'] ?? 'Affiliate' }}</a> 
         <a href="#contact" class="hover:opacity-70 transition-opacity">{{ $settings['nav_label_contact'] ?? 'Kontak' }}</a>
+        @auth
+            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('affiliate.dashboard') }}" class="btn-primary px-4 py-2 rounded-xl flex items-center gap-2">
+                <i class="fas fa-th-large"></i>
+                Dashboard
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="btn-secondary px-4 py-2 rounded-xl flex items-center gap-2">
+                <i class="fas fa-user"></i>
+                Login
+            </a>
+        @endauth
      </div>
     </div>
    </nav>   <!-- Dynamic Sections Loop -->
