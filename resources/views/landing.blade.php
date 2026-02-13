@@ -96,7 +96,7 @@
                 <!-- Product Image -->
                 <div class="h-48 bg-pink-50 relative flex items-center justify-center group-hover:bg-pink-100 transition-colors overflow-hidden">
                     @if($product->image_url)
-                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                     @elseif($product->icon)
                         <iconify-icon icon="{{ $product->icon }}" class="text-5xl text-primary/60"></iconify-icon>
                     @else
