@@ -28,6 +28,7 @@
                         <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jumlah</th>
                         <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal</th>
+                        <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -59,17 +60,41 @@
                                 <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Dibayar</span>
                             @elseif($order->payment_status == 'pending')
                                 <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Tertunda</span>
+                            @elseif($order->payment_status == 'cancelled')
+                                <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Dibatalkan</span>
+                            @elseif($order->payment_status == 'failed')
+                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">Gagal</span>
                             @else
-                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">{{ $order->payment_status == 'failed' ? 'Gagal' : $order->payment_status }}</span>
+                                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">{{ $order->payment_status }}</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center text-xs text-gray-500">
                             {{ $order->created_at->format('d M Y H:i') }}
                         </td>
+                        <td class="px-6 py-4">
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center;">
+                                @if($order->payment_status != 'cancelled' && $order->payment_status != 'failed')
+                                    <form action="{{ route('admin.orders.cancel', $order->order_id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?')">
+                                        @csrf
+                                        <button type="submit" style="background-color: #f59e0b; color: white; font-size: 11px; padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer;">
+                                            Batalkan
+                                        </button>
+                                    </form>
+                                @endif
+                                
+                                <form action="{{ route('admin.orders.destroy', $order->order_id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin menghapus pesanan ini? Data yang dihapus tidak dapat dikembalikan.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="background-color: #ef4444; color: white; font-size: 11px; padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer;">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-12 text-center text-gray-400 italic">Belum ada pesanan.</td>
+                        <td colspan="8" class="px-6 py-12 text-center text-gray-400 italic">Belum ada pesanan.</td>
                     </tr>
                     @endforelse
                 </tbody>

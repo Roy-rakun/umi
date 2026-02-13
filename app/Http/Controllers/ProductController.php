@@ -84,6 +84,20 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         
+        // Check if product has related orders
+        $ordersCount = \App\Models\Order::where('product_id', $id)->count();
+        if ($ordersCount > 0) {
+            return redirect()->route('admin.products.index')
+                ->with('error', "Tidak dapat menghapus produk '{$product->name}' karena memiliki {$ordersCount} pesanan terkait. Hapus pesanan terlebih dahulu atau nonaktifkan produk.");
+        }
+        
+        // Check if product has related commissions
+        $commissionsCount = \App\Models\Commission::where('product_id', $id)->count();
+        if ($commissionsCount > 0) {
+            return redirect()->route('admin.products.index')
+                ->with('error', "Tidak dapat menghapus produk '{$product->name}' karena memiliki {$commissionsCount} komisi terkait.");
+        }
+        
         // Delete image
         if ($product->image_url) {
             $oldPath = str_replace('/storage/', '', $product->image_url);
@@ -91,6 +105,6 @@ class ProductController extends Controller
         }
         
         $product->delete();
-        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.products.index')->with('success', "Produk '{$product->name}' berhasil dihapus.");
     }
 }

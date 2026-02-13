@@ -289,4 +289,41 @@ class AdminController extends Controller
         
         return back()->with('success', "Affiliate $name berhasil dihapus secara permanen.");
     }
+
+    public function cancelOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        
+        if ($order->payment_status == 'cancelled') {
+            return back()->with('error', 'Pesanan sudah dibatalkan sebelumnya.');
+        }
+        
+        if ($order->payment_status == 'paid') {
+            return back()->with('error', 'Tidak dapat membatalkan pesanan yang sudah dibayar.');
+        }
+        
+        $order->update(['payment_status' => 'cancelled']);
+        
+        // Cancel related commissions
+        Commission::where('order_id', $order->order_id)->update(['status' => 'cancelled']);
+        
+        return back()->with('success', "Pesanan #{$order->order_id} berhasil dibatalkan.");
+    }
+
+    public function deleteOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        $orderId = $order->order_id;
+        
+        // Delete related commissions first
+        Commission::where('order_id', $order->order_id)->delete();
+        
+        // Delete order items if exists
+        \App\Models\OrderItem::where('order_id', $order->order_id)->delete();
+        
+        // Delete the order
+        $order->delete();
+        
+        return back()->with('success', "Pesanan #{$orderId} berhasil dihapus secara permanen.");
+    }
 }

@@ -46,6 +46,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/affiliates', [AdminController::class, 'affiliates'])->name('affiliates');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+    Route::post('/orders/{id}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
+    Route::delete('/orders/{id}', [AdminController::class, 'deleteOrder'])->name('orders.destroy');
     
     // Page Management
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);

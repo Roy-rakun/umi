@@ -77,7 +77,7 @@
                                         </button>
                                     </form>
                                 @endif
-                                
+
                                 @if($affiliate->status == 'suspended')
                                     <form action="{{ route('admin.affiliates.unsuspend', $affiliate->affiliate_id) }}" method="POST" style="display: inline-block;">
                                         @csrf
