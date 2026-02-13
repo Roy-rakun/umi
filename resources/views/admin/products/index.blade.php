@@ -67,6 +67,11 @@
                     </td>
                     <td class="p-4 text-right space-x-2">
                         <a href="{{ route('admin.products.edit', $product->product_id) }}" class="text-[#8B7355] hover:text-[#6d5a43] font-medium transition-colors">Ubah</a>
+                        <form action="{{ route('admin.products.destroy', $product->product_id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-800 font-medium transition-colors">Hapus</button>
+                        </form>
                     </td>
                 </tr>
                 @empty

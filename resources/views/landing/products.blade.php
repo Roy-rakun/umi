@@ -16,9 +16,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             @foreach($products as $product)
             <div class="card-soft rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-red-50 flex flex-col h-full bg-white">
-                <div class="aspect-square bg-gradient-to-br from-rose-50 to-amber-50 relative flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+                <div class="aspect-square bg-gradient-to-br from-rose-50 to-amber-50 relative flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity overflow-hidden"
                      @click="open = true; product = {{ json_encode($product) }}">
-                    <span class="text-5xl">@if($product->type == 'physical') 📿 @else 🎓 @endif</span>
+                    @if($product->image_url)
+                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    @elseif($product->icon)
+                        <iconify-icon icon="{{ $product->icon }}" class="text-5xl text-primary/60"></iconify-icon>
+                    @else
+                        <span class="text-5xl">@if($product->type == 'physical') 📿 @else 🎓 @endif</span>
+                    @endif
                 </div>
                 
                 <div class="p-6 flex-1 flex flex-col">
@@ -62,8 +68,13 @@
         </button>
 
         <div class="grid md:grid-cols-2">
-            <div class="aspect-square bg-gradient-to-br from-rose-100 to-amber-50 flex items-center justify-center text-7xl">
-                <span x-text="product.type == 'physical' ? '📿' : '🎓'"></span>
+            <div class="aspect-square bg-gradient-to-br from-rose-100 to-amber-50 flex items-center justify-center text-7xl overflow-hidden">
+                <template x-if="product.image_url">
+                    <img :src="'/storage/' + product.image_url.replace('/storage/', '')" :alt="product.name" class="w-full h-full object-cover">
+                </template>
+                <template x-if="!product.image_url">
+                    <span x-text="product.type == 'physical' ? '📿' : '🎓'"></span>
+                </template>
             </div>
             <div class="p-8 flex flex-col">
                 <span class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2" x-text="product.type == 'physical' ? 'Produk Fisik' : 'Kelas Digital'"></span>

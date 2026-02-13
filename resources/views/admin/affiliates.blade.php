@@ -67,19 +67,41 @@
                                 Rp {{ number_format($affiliate->total_commission, 0, ',', '.') }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-center">
-                            @if(!$affiliate->user->hasVerifiedEmail())
-                            <form action="{{ route('admin.affiliates.verify', $affiliate->affiliate_id) }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="text-xs bg-amber-500 text-white px-2 py-1 rounded hover:bg-amber-600 transition-colors" title="Verifikasi Manual">
-                                    Verifikasi
-                                </button>
-                            </form>
-                            @else
-                            <button class="text-gray-400 hover:text-primary transition-colors">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>
-                            @endif
+                        <td class="px-6 py-4">
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                                @if(!$affiliate->user->hasVerifiedEmail())
+                                    <form action="{{ route('admin.affiliates.verify', $affiliate->affiliate_id) }}" method="POST" style="display: inline-block;">
+                                        @csrf
+                                        <button type="submit" style="background-color: #f59e0b; color: white; font-size: 12px; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer;">
+                                            Verifikasi
+                                        </button>
+                                    </form>
+                                @endif
+                                
+                                @if($affiliate->status == 'suspended')
+                                    <form action="{{ route('admin.affiliates.unsuspend', $affiliate->affiliate_id) }}" method="POST" style="display: inline-block;">
+                                        @csrf
+                                        <button type="submit" style="background-color: #22c55e; color: white; font-size: 12px; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer;">
+                                            Aktifkan
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('admin.affiliates.suspend', $affiliate->affiliate_id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin menangguhkan affiliate ini?')">
+                                        @csrf
+                                        <button type="submit" style="background-color: #eab308; color: white; font-size: 12px; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer;">
+                                            Suspend
+                                        </button>
+                                    </form>
+                                @endif
+                                
+                                <form action="{{ route('admin.affiliates.destroy', $affiliate->affiliate_id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin menghapus affiliate ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="background-color: #ef4444; color: white; font-size: 12px; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer;">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty

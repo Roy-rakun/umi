@@ -73,6 +73,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Manual Verification
     Route::post('/affiliates/verify-all', [AdminController::class, 'verifyAllAffiliates'])->name('affiliates.verify-all');
     Route::post('/affiliates/{id}/verify', [AdminController::class, 'verifyAffiliate'])->name('affiliates.verify');
+    
+    // Affiliate Management Actions
+    Route::post('/affiliates/{id}/suspend', [AdminController::class, 'suspendAffiliate'])->name('affiliates.suspend');
+    Route::post('/affiliates/{id}/unsuspend', [AdminController::class, 'unsuspendAffiliate'])->name('affiliates.unsuspend');
+    Route::delete('/affiliates/{id}', [AdminController::class, 'deleteAffiliate'])->name('affiliates.destroy');
 });
 
 // Affiliate Routes

@@ -27,6 +27,19 @@ class AuthController extends Controller
             
             $user = Auth::user();
             
+            // Check if affiliate is suspended
+            if ($user->role === 'affiliate') {
+                $affiliate = $user->affiliate;
+                if ($affiliate && $affiliate->status === 'suspended') {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                    return back()->withErrors([
+                        'email' => 'Akun Anda telah ditangguhkan. Silakan hubungi admin untuk informasi lebih lanjut.',
+                    ])->onlyInput('email');
+                }
+            }
+            
             if ($user->role === 'admin') {
                 return redirect()->intended('admin/dashboard');
             } else {

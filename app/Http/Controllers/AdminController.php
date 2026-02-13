@@ -253,4 +253,40 @@ class AdminController extends Controller
 
         return back()->with('success', "Total $count akun berhasil diverifikasi secara massal.");
     }
+
+    public function suspendAffiliate($id)
+    {
+        $affiliate = Affiliate::findOrFail($id);
+        $affiliate->update(['status' => 'suspended']);
+        
+        return back()->with('success', "Affiliate {$affiliate->user->name} berhasil ditangguhkan.");
+    }
+
+    public function unsuspendAffiliate($id)
+    {
+        $affiliate = Affiliate::findOrFail($id);
+        $affiliate->update(['status' => 'active']);
+        
+        return back()->with('success', "Affiliate {$affiliate->user->name} berhasil diaktifkan kembali.");
+    }
+
+    public function deleteAffiliate($id)
+    {
+        $affiliate = Affiliate::findOrFail($id);
+        $user = $affiliate->user;
+        $name = $user->name;
+        
+        // Delete related data
+        $affiliate->commissions()->delete();
+        $affiliate->payouts()->delete();
+        $affiliate->links()->delete();
+        
+        // Delete affiliate record
+        $affiliate->delete();
+        
+        // Delete user
+        $user->delete();
+        
+        return back()->with('success', "Affiliate $name berhasil dihapus secara permanen.");
+    }
 }

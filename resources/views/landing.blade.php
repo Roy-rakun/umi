@@ -93,9 +93,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($products as $product)
             <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-pink-50 group flex flex-col h-full">
-                <!-- Image Placeholder -->
-                <div class="h-48 bg-pink-50 relative flex items-center justify-center group-hover:bg-pink-100 transition-colors">
-                    <i class="fas fa-box-open text-primary/30 text-4xl"></i>
+                <!-- Product Image -->
+                <div class="h-48 bg-pink-50 relative flex items-center justify-center group-hover:bg-pink-100 transition-colors overflow-hidden">
+                    @if($product->image_url)
+                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    @elseif($product->icon)
+                        <iconify-icon icon="{{ $product->icon }}" class="text-5xl text-primary/60"></iconify-icon>
+                    @else
+                        <i class="fas fa-box-open text-primary/30 text-4xl"></i>
+                    @endif
                     
                     @if($loop->iteration == 1)
                         <span class="absolute top-3 left-3 bg-[#7D2E35] text-white text-[10px] uppercase font-bold px-2 py-1 rounded">Popular</span>
