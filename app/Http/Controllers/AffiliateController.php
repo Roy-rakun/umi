@@ -10,6 +10,7 @@ use App\Models\Affiliate;
 use App\Models\Commission;
 use App\Models\AffiliateLink;
 use App\Models\Payout;
+use App\Models\Order;
 use App\Models\User;
 use App\Notifications\NewPayoutRequestNotification;
 use Illuminate\Support\Facades\Notification;
@@ -170,5 +171,95 @@ class AffiliateController extends Controller
     {
         auth()->user()->unreadNotifications->markAsRead();
         return back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca');
+    }
+
+    /**
+     * Display orders for the logged-in buyer/affiliate
+     */
+    public function orders()
+    {
+        $user = Auth::user();
+        
+        // Get orders by buyer email
+        $orders = Order::with(['items.product'])
+            ->where('buyer_email', $user->email)
+            ->orderByDesc('created_at')
+            ->paginate(10);
+
+        return view('affiliate.orders', compact('orders'));
+    }
+
+    /**
+     * Get order detail for modal
+     */
+    public function orderDetail($orderId)
+    {
+        $order = Order::with(['items.product'])
+            ->where('order_id', $orderId)
+            ->firstOrFail();
+
+        // Check if user owns this order
+        if ($order->buyer_email !== auth()->user()->email) {
+            abort(403, 'Unauthorized access to this order.');
+        }
+
+        return response()->json([
+            'success' => true,
+            'order' => $order,
+            'shipping_details' => json_decode($order->shipping_details, true),
+        ]);
+    }
+
+    /**
+     * Retry payment - generate new payment link
+     */
+    public function retryPayment($orderId)
+    {
+        $order = Order::where('order_id', $orderId)->firstOrFail();
+
+        // Check if user owns this order
+        if ($order->buyer_email !== auth()->user()->email) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to this order.'
+            ], 403);
+        }
+
+        // If payment link exists, return it
+        if ($order->payment_link) {
+            return response()->json([
+                'success' => true,
+                'payment_link' => $order->payment_link
+            ]);
+        }
+
+        // Try to create new payment link
+        try {
+            $mayarService = new \App\Services\MayarService();
+            $paymentData = $mayarService->createPaymentLink($order, $order->buyer_name, $order->buyer_email);
+
+            if ($paymentData && isset($paymentData['link'])) {
+                $order->update([
+                    'payment_link' => $paymentData['link'],
+                    'external_id' => $paymentData['id'] ?? null,
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'payment_link' => $paymentData['link']
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal membuat link pembayaran. Response tidak valid.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Retry Payment Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat link pembayaran: ' . $e->getMessage()
+            ]);
+        }
     }
 }

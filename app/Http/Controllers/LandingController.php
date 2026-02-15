@@ -174,6 +174,8 @@ class LandingController extends Controller
             $mayarService = new \App\Services\MayarService();
             $paymentData = $mayarService->createPaymentLink($order, $buyer['name'], $buyer['email']);
             
+            \Illuminate\Support\Facades\Log::info('Mayar Payment Response', ['paymentData' => $paymentData]);
+            
             if ($paymentData && isset($paymentData['link'])) {
                 $order->update([
                     'payment_link' => $paymentData['link'],
@@ -190,10 +192,25 @@ class LandingController extends Controller
                 ]);
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Mayar Payment Error: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Gagal membuat link pembayaran: ' . $e->getMessage()], 500);
+            \Illuminate\Support\Facades\Log::error('Mayar Payment Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'order' => $order->toArray()
+            ]);
         }
-
-        return response()->json(['success' => false, 'message' => 'Gagal memproses pembayaran.'], 500);
+        
+        // Order tetap tersimpan, tapi tanpa payment link
+        // User bisa retry pembayaran nanti
+        \Illuminate\Support\Facades\Log::warning('Order created without payment link', ['order_id' => $order->order_id]);
+        
+        // Notify Admin about new order (even without payment link)
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new NewOrderNotification($order));
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Order berhasil dibuat. Silakan lakukan pembayaran.',
+            'order_id' => $order->order_id,
+            'redirect' => route('affiliate.orders')
+        ]);
     }
 }

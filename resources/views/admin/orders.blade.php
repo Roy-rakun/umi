@@ -71,7 +71,7 @@
                         <td class="px-6 py-4 text-center text-xs text-gray-500">
                             {{ $order->created_at->format('d M Y H:i') }}
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4" onclick="event.stopPropagation()">
                             <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center;">
                                 @if($order->payment_status != 'cancelled' && $order->payment_status != 'failed')
                                     <form action="{{ route('admin.orders.cancel', $order->order_id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?')">

@@ -659,8 +659,18 @@
                         });
 
                         const result = await response.json();
-                        if (result.success && result.payment_link) {
-                            window.location.href = result.payment_link;
+                        if (result.success) {
+                            if (result.payment_link) {
+                                // Redirect ke payment gateway
+                                window.location.href = result.payment_link;
+                            } else if (result.redirect) {
+                                // Redirect ke halaman orders jika payment link gagal
+                                window.location.href = result.redirect;
+                            } else {
+                                // Fallback - alert dengan pesan
+                                alert(result.message || 'Order berhasil dibuat. Silakan cek halaman pesanan Anda.');
+                                window.location.href = '/affiliate/orders';
+                            }
                         } else {
                             alert(result.message || 'Terjadi kesalahan saat memproses pesanan.');
                         }

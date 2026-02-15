@@ -42,7 +42,7 @@ Route::post('/email/verification-notification', function (Illuminate\Http\Reques
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 // Admin Routes
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -102,6 +102,11 @@ Route::prefix('affiliate')->name('affiliate.')->middleware(['auth', 'verified'])
     Route::post('/payouts/request', [AffiliateController::class, 'requestPayout'])->name('payouts.request');
     Route::get('/marketing-assets', [AffiliateController::class, 'marketingAssets'])->name('marketing_assets');
     Route::get('/academy', [AffiliateController::class, 'academy'])->name('academy');
+    
+    // Orders routes
+    Route::get('/orders', [AffiliateController::class, 'orders'])->name('orders');
+    Route::get('/orders/{orderId}/detail', [AffiliateController::class, 'orderDetail'])->name('orders.detail');
+    Route::get('/orders/{orderId}/retry-payment', [AffiliateController::class, 'retryPayment'])->name('orders.retry-payment');
     
     // Notification routes
     Route::get('/notifications', [AffiliateController::class, 'notifications'])->name('notifications.index');

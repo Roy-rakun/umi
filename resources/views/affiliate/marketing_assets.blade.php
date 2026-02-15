@@ -28,8 +28,8 @@
             @foreach($products as $product)
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                 <div class="aspect-video bg-gray-100 rounded-xl mb-4 flex items-center justify-center text-gray-400 overflow-hidden">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    @if($product->image_url)
+                        <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                     @else
                         <i class="fas fa-image text-3xl opacity-20"></i>
                     @endif

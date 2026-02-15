@@ -90,6 +90,12 @@
                         <span class="font-medium text-sm">Link Saya</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('affiliate.orders') }}" class="sidebar-link flex items-center p-3 rounded-lg transition-all {{ request()->routeIs('affiliate.orders') ? 'active' : 'text-gray-500' }}">
+                        <i class="fas fa-shopping-bag w-6 text-center mr-3 text-sm"></i>
+                        <span class="font-medium text-sm">Pesanan Saya</span>
+                    </a>
+                </li>
             </ul>
             
             <p class="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Penghasilan</p>
