@@ -51,6 +51,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/orders/{id}', [AdminController::class, 'orderDetail'])->name('orders.detail');
     Route::post('/orders/{id}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
     Route::delete('/orders/{id}', [AdminController::class, 'deleteOrder'])->name('orders.destroy');
+    Route::post('/orders/bulk-action', [AdminController::class, 'bulkActionOrders'])->name('orders.bulk-action');
     
     // Page Management
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);

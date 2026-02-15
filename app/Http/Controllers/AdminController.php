@@ -374,6 +374,49 @@ class AdminController extends Controller
         return back()->with('success', "Pesanan #{$orderId} berhasil dihapus secara permanen.");
     }
 
+    /**
+     * Bulk action for orders (cancel or delete)
+     */
+    public function bulkActionOrders(Request $request)
+    {
+        $action = $request->input('action');
+        $orderIds = json_decode($request->input('order_ids', '[]'), true);
+
+        if (empty($orderIds)) {
+            return back()->with('error', 'Tidak ada pesanan yang dipilih.');
+        }
+
+        switch ($action) {
+            case 'cancel':
+                $cancelledCount = 0;
+                foreach ($orderIds as $orderId) {
+                    $order = Order::where('order_id', $orderId)->first();
+                    if ($order && $order->payment_status !== 'paid' && $order->payment_status !== 'cancelled') {
+                        $order->update(['payment_status' => 'cancelled']);
+                        Commission::where('order_id', $order->order_id)->update(['status' => 'cancelled']);
+                        $cancelledCount++;
+                    }
+                }
+                return back()->with('success', "$cancelledCount pesanan berhasil dibatalkan.");
+
+            case 'delete':
+                $deletedCount = 0;
+                foreach ($orderIds as $orderId) {
+                    $order = Order::where('order_id', $orderId)->first();
+                    if ($order) {
+                        Commission::where('order_id', $order->order_id)->delete();
+                        \App\Models\OrderItem::where('order_id', $order->order_id)->delete();
+                        $order->delete();
+                        $deletedCount++;
+                    }
+                }
+                return back()->with('success', "$deletedCount pesanan berhasil dihapus secara permanen.");
+
+            default:
+                return back()->with('error', 'Aksi tidak valid.');
+        }
+    }
+
     public function updateAffiliateGroup(Request $request, $id)
     {
         $request->validate([
