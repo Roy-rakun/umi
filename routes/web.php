@@ -48,6 +48,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/affiliates', [AdminController::class, 'affiliates'])->name('affiliates');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+    Route::get('/orders/{id}', [AdminController::class, 'orderDetail'])->name('orders.detail');
     Route::post('/orders/{id}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
     Route::delete('/orders/{id}', [AdminController::class, 'deleteOrder'])->name('orders.destroy');
     

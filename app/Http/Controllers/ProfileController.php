@@ -20,6 +20,16 @@ class ProfileController extends Controller
         return view('affiliate.profile', compact('user', 'provinces'));
     }
 
+    // AJAX Endpoint for provinces
+    public function getProvinces()
+    {
+        $provinces = IndonesiaRegion::whereRaw("code NOT LIKE '%.%'")
+            ->orderBy('name')
+            ->get(['code', 'name']);
+        
+        return response()->json($provinces);
+    }
+
     public function update(Request $request)
     {
         $request->validate([

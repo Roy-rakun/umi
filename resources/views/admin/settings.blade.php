@@ -123,33 +123,241 @@
             </div>
         </div>
 
-        <!-- J&T Express Settings -->
-        <div class="mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <!-- Indonesia Expedition Cost API Settings -->
+        <div class="mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200" x-data="originLocationSelector({
+            selectedProvince: '{{ $settings['origin_province_id'] ?? '' }}',
+            selectedCity: '{{ $settings['origin_city_id_api'] ?? '' }}',
+            selectedDistrict: '{{ $settings['origin_district_id'] ?? '' }}',
+            selectedVillage: '{{ $settings['origin_village_id'] ?? '' }}',
+            postalCode: '{{ $settings['origin_postal_code'] ?? '' }}'
+        })">
             <div class="flex items-center mb-4">
                 <i class="fas fa-truck text-[#FF0000] text-xl mr-3"></i>
-                <h4 class="text-lg font-semibold">Shipping (J&T Express)</h4>
+                <h4 class="text-lg font-semibold">Shipping (J&T Express via API Indonesia)</h4>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Client ID (Ecommerce ID)</label>
-                    <input type="text" name="jnt_client_id" value="{{ $settings['jnt_client_id'] ?? '' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="JET-...">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">API Key (Data Digest Password)</label>
-                    <input type="password" name="jnt_api_key" value="{{ $settings['jnt_api_key'] ?? '' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
-                </div>
-                <div class="col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Origin Store Address</label>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" name="origin_province" value="{{ $settings['origin_province'] ?? '' }}" placeholder="Province (e.g. DKI Jakarta)" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
-                        <input type="text" name="origin_city" value="{{ $settings['origin_city'] ?? '' }}" placeholder="City (e.g. Jakarta Selatan)" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
-                        <input type="text" name="origin_district" value="{{ $settings['origin_district'] ?? '' }}" placeholder="District (e.g. Setiabudi)" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                    <div>
+                        <p class="text-sm text-blue-800 font-medium">API Indonesia Expedition Cost</p>
+                        <p class="text-xs text-blue-600 mt-1">Menggunakan API dari <a href="https://docs.api.co.id/api/indonesia-expedition-cost/" target="_blank" class="underline">docs.api.co.id</a> untuk menghitung ongkir J&T Express.</p>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Exact naming is required by J&T API.</p>
+                </div>
+            </div>
+            
+            <!-- API Key Setting -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+                    <input type="password" name="indonesia_expedition_api_key" value="{{ $settings['indonesia_expedition_api_key'] ?? 'Bp3gPph4yGCL3SYBrEVBLXvMZpXUs0RibG26nwtE45b7XDnvuu' }}" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="Masukkan API Key dari docs.api.co.id">
+                    <p class="text-xs text-gray-500 mt-1">Dapatkan API Key dari <a href="https://docs.api.co.id" target="_blank" class="text-blue-500 underline">docs.api.co.id</a></p>
+                </div>
+            </div>
+            
+            <!-- Origin Location Selector -->
+            <div class="border-t border-gray-200 pt-6 mt-6">
+                <h5 class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Lokasi Asal Pengiriman</h5>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Province -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Provinsi</label>
+                        <select name="origin_province_id" x-model="selectedProvince" @change="loadCities()" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" required>
+                            <option value="">Pilih Provinsi</option>
+                            <template x-for="prov in provinces" :key="prov.code">
+                                <option :value="prov.code" x-text="prov.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    <!-- City -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kota/Kabupaten</label>
+                        <select name="origin_city_id_api" x-model="selectedCity" @change="loadDistricts()" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" :disabled="!selectedProvince" required>
+                            <option value="">Pilih Kota</option>
+                            <template x-for="city in cities" :key="city.code">
+                                <option :value="city.code" x-text="city.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    <!-- District -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kecamatan</label>
+                        <select name="origin_district_id" x-model="selectedDistrict" @change="loadVillages()" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" :disabled="!selectedCity" required>
+                            <option value="">Pilih Kecamatan</option>
+                            <template x-for="dist in districts" :key="dist.code">
+                                <option :value="dist.code" x-text="dist.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    <!-- Village -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kelurahan</label>
+                        <select name="origin_village_id" x-model="selectedVillage" @change="updatePostalCode()" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" :disabled="!selectedDistrict" required>
+                            <option value="">Pilih Kelurahan</option>
+                            <template x-for="vill in villages" :key="vill.code">
+                                <option :value="vill.code" x-text="vill.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    <!-- Postal Code -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kode Pos</label>
+                        <input type="text" name="origin_postal_code" x-model="postalCode" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="Kode Pos" readonly>
+                    </div>
+                    
+                    <!-- City Name for Display -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Kota (untuk invoice)</label>
+                        <input type="text" name="origin_city_name" x-model="selectedCityName" class="w-full p-2 border border-gray-300 rounded focus:ring-[#8B7355] focus:border-[#8B7355]" placeholder="Nama kota untuk ditampilkan">
+                    </div>
+                </div>
+                
+                <!-- Hidden field for API city ID -->
+                <input type="hidden" name="origin_city_id" x-model="selectedCity">
+            </div>
+            
+            <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i>
+                    <div>
+                        <p class="text-sm text-yellow-800"><strong>Kurir Aktif:</strong> J&T Express saja</p>
+                        <p class="text-xs text-yellow-600 mt-1">Saat ini sistem hanya menggunakan J&T Express untuk pengiriman.</p>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        @push('scripts')
+        <script>
+            function originLocationSelector(config) {
+                return {
+                    provinces: [],
+                    cities: [],
+                    districts: [],
+                    villages: [],
+                    selectedProvince: config.selectedProvince || '',
+                    selectedCity: config.selectedCity || '',
+                    selectedDistrict: config.selectedDistrict || '',
+                    selectedVillage: config.selectedVillage || '',
+                    postalCode: config.postalCode || '',
+                    selectedCityName: config.selectedCityName || '',
+                    initialized: false,
+                    
+                    async init() {
+                        await this.loadProvinces();
+                        if (this.selectedProvince) {
+                            await this.loadCities(true);
+                        }
+                        this.initialized = true;
+                    },
+                    
+                    async loadProvinces() {
+                        try {
+                            const response = await fetch('/api/regions/provinces');
+                            this.provinces = await response.json();
+                        } catch (e) {
+                            console.error('Failed to load provinces:', e);
+                        }
+                    },
+                    
+                    async loadCities(initialLoad = false) {
+                        // Don't reset if this is initial load
+                        if (!initialLoad) {
+                            this.cities = [];
+                            this.districts = [];
+                            this.villages = [];
+                            this.selectedCity = '';
+                            this.selectedDistrict = '';
+                            this.selectedVillage = '';
+                            this.postalCode = '';
+                            this.selectedCityName = '';
+                        }
+                        
+                        if (this.selectedProvince) {
+                            try {
+                                const response = await fetch(`/api/regions/cities/${this.selectedProvince}`);
+                                this.cities = await response.json();
+                                
+                                // If initial load, wait for cities to load then restore selection
+                                if (initialLoad && config.selectedCity) {
+                                    // Wait a tick for the select to update
+                                    await this.$nextTick();
+                                    this.selectedCity = config.selectedCity;
+                                    await this.loadDistricts(true);
+                                }
+                            } catch (e) {
+                                console.error('Failed to load cities:', e);
+                            }
+                        }
+                    },
+                    
+                    async loadDistricts(initialLoad = false) {
+                        if (!initialLoad) {
+                            this.districts = [];
+                            this.villages = [];
+                            this.selectedDistrict = '';
+                            this.selectedVillage = '';
+                            this.postalCode = '';
+                        }
+                        
+                        if (this.selectedCity) {
+                            // Update city name
+                            const city = this.cities.find(c => c.code === this.selectedCity);
+                            this.selectedCityName = city ? city.name : '';
+                            
+                            try {
+                                const response = await fetch(`/api/regions/districts/${this.selectedCity}`);
+                                this.districts = await response.json();
+                                
+                                if (initialLoad && config.selectedDistrict) {
+                                    await this.$nextTick();
+                                    this.selectedDistrict = config.selectedDistrict;
+                                    await this.loadVillages(true);
+                                }
+                            } catch (e) {
+                                console.error('Failed to load districts:', e);
+                            }
+                        }
+                    },
+                    
+                    async loadVillages(initialLoad = false) {
+                        if (!initialLoad) {
+                            this.villages = [];
+                            this.selectedVillage = '';
+                            this.postalCode = '';
+                        }
+                        
+                        if (this.selectedDistrict) {
+                            try {
+                                const response = await fetch(`/api/regions/villages/${this.selectedDistrict}`);
+                                this.villages = await response.json();
+                                
+                                if (initialLoad && config.selectedVillage) {
+                                    await this.$nextTick();
+                                    this.selectedVillage = config.selectedVillage;
+                                    this.updatePostalCode();
+                                }
+                            } catch (e) {
+                                console.error('Failed to load villages:', e);
+                            }
+                        }
+                    },
+                    
+                    updatePostalCode() {
+                        if (this.selectedVillage) {
+                            const village = this.villages.find(v => v.code === this.selectedVillage);
+                            this.postalCode = village ? (village.postal_code || '') : '';
+                        }
+                    }
+                }
+            }
+        </script>
+        @endpush
 
         <div class="flex justify-end">
             <button type="submit" class="bg-[#2C3E50] text-white px-6 py-2 rounded hover:bg-[#1A252F] transition-colors">

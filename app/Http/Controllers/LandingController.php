@@ -122,6 +122,26 @@ class LandingController extends Controller
             }
         }
 
+        // 3. Calculate shipping cost if physical products
+        $shippingCost = 0;
+        $shippingDetails = null;
+        $shipping = $request->input('shipping');
+        
+        if ($shipping) {
+            $shippingCost = $shipping['cost'] ?? 0;
+            $shippingDetails = json_encode([
+                'province_id' => $shipping['province_id'] ?? null,
+                'city_id' => $shipping['city_id'] ?? null,
+                'address' => $shipping['address'] ?? null,
+                'courier' => $shipping['courier'] ?? 'jnt',
+                'service' => $shipping['service'] ?? null,
+                'cost' => $shippingCost,
+                'etd' => $shipping['etd'] ?? null,
+            ]);
+        }
+        
+        $totalWithShipping = $totalAmount + $shippingCost;
+
         // 3. Create Order
         $order = Order::create([
             'order_id' => 'ORD-' . strtoupper(Str::random(8)),
@@ -131,7 +151,9 @@ class LandingController extends Controller
             'buyer_name' => $buyer['name'],
             'buyer_email' => $buyer['email'],
             'buyer_phone' => $buyer['phone'] ?? null,
-            'amount' => $totalAmount,
+            'amount' => $totalWithShipping,
+            'shipping_cost' => $shippingCost,
+            'shipping_details' => $shippingDetails,
             'payment_status' => 'pending',
             'ip_address' => $request->ip(),
         ]);

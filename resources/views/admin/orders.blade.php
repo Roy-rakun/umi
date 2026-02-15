@@ -33,7 +33,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @forelse($orders as $order)
-                    <tr class="hover:bg-gray-50/50 transition-colors">
+                    <tr class="hover:bg-gray-50/50 transition-colors cursor-pointer" onclick="window.location='{{ route('admin.orders.detail', $order->order_id) }}'">
                         <td class="px-6 py-4 text-xs font-bold text-heading">
                             #{{ $order->order_id }}
                         </td>

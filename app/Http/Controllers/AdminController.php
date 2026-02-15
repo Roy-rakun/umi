@@ -95,6 +95,13 @@ class AdminController extends Controller
         return view('admin.orders', compact('orders'));
     }
 
+    public function orderDetail($id)
+    {
+        $order = Order::with(['product', 'items.product', 'affiliate.user', 'commission'])
+            ->findOrFail($id);
+        return view('admin.order_detail', compact('order'));
+    }
+
     // public function products() { return view('admin.products'); } // Replaced by ProductController
 
     public function commissions()
